@@ -1,0 +1,149 @@
+/* offe and feedback carousel */
+
+/* offer Styles */
+.off-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Scoped Carousel Styles */
+.off-carousel-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Only apply carousel styles inside .off-carousel-container */
+.off-carousel-container .owl-carousel {
+    display: flex;
+    align-items: center;
+}
+
+.off-carousel-container .owl-stage-outer {
+    overflow: hidden;
+}
+
+.off-carousel-container .owl-item {
+    display: flex;
+    justify-content: center;
+}
+
+/* Card Styling */
+.off-card {
+    background-color: #8bc34a3a;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    margin: 10px;
+    min-height: 30vh;
+    display: flex;
+    align-items: center;
+}
+
+/* Flex Container */
+.off-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Image */
+.off-image {
+    width: 30%;
+}
+
+.off-image img {
+    border-radius: 50%;
+    width: 100%;
+    height: auto;
+    min-height: 10rem;
+    object-fit: cover;
+}
+
+/* Text Content */
+.off-content {
+    width: 70%;
+    text-align: left;
+}
+
+/* Title */
+.off-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 12px;
+}
+
+/* Discount */
+.off-discount {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #8bc34a;
+    margin-bottom: 20px;
+}
+
+/* Description */
+.off-description {
+    color: #374151;
+    overflow: hidden;
+}
+
+/* feedback styles */
+.feed-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.feed-carousel-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    position: relative;
+}
+
+.feed-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 10px;
+    min-height: 30vh;
+    min-width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    text-align: left;
+}
+
+.feed-content {
+    width: 100%;
+    text-align: left;
+}
+
+.feed-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.feed-message {
+    font-size: 1.25rem;
+    color: #374151;
+}
+
+.feed-date {
+    font-weight: 700;
+    color: #8bc34a;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 1rem;
+    font-style: italic;
+}
+
