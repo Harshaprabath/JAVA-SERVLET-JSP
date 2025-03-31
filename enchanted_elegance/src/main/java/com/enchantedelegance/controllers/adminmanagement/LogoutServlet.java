@@ -16,6 +16,6 @@ public class LogoutServlet extends HttpServlet {
         if (session != null) {
             session.removeAttribute("admin");
         }
-        resp.sendRedirect("../admin");
+        resp.sendRedirect("../admin?success=Logout successful");
     }
 }

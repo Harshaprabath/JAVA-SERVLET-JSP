@@ -44,7 +44,7 @@
         <input type="text" name="mobile" value="<%= feedback.getMobile() %>" required><br>
 
         <label>Message:</label>
-        <textarea name="message" cols="30" rows="5"  placeholder="Write your feedback here..."><%= feedback.getMessage() %></textarea>
+        <textarea name="message" cols="30" rows="10"  placeholder="Write your feedback here..."><%= feedback.getMessage() %></textarea>
         <br>
 
         <label>Date:</label>
