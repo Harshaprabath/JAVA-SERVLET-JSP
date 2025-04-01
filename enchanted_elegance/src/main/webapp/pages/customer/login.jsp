@@ -7,6 +7,9 @@
         response.sendRedirect("/enchanted_elegance/pages/customer/index.jsp");
         return;
     }
+
+    // Check for error messages from the servlet
+    String errorMessage = (String) request.getAttribute("errorMessage");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +21,9 @@
 
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
+  
+  <%-- form validation --%>
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/auth.css">  
 
 </head>
 
@@ -38,6 +44,7 @@
                 <div class="col-md-12">
                   <label class="text-black" for="email">Email</label>
                   <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                  <small class="error-message" id="emailError"></small>
                 </div>
               </div>
 
@@ -45,6 +52,7 @@
                 <div class="col-md-12">
                   <label class="text-black" for="password">Password</label>
                   <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                  <small class="error-message" id="passwordError"></small>
                 </div>
               </div>
 
@@ -70,6 +78,8 @@
   <script src="/enchanted_elegance/pages/customer/js/main.js"></script>
 
   <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
+
+  <script src="/enchanted_elegance/pages/customer/js/components/login.js"></script>
   
   </script>
 </body>
