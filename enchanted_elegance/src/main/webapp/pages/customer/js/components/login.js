@@ -2,13 +2,12 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
     event.preventDefault();
     let isValid = true;
 
-    // Validation functions
+    // Validation function
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-  
     // Clear previous errors
     document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
     document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
@@ -24,7 +23,6 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
         emailInput.classList.add("error");
         isValid = false;
     }
-
 
     // Validate password
     const passwordInput = document.getElementById("password");

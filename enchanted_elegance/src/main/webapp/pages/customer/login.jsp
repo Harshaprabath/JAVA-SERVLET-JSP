@@ -21,9 +21,7 @@
 
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
-  
-  <%-- form validation --%>
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/auth.css">  
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/auth.css">
 
 </head>
 
@@ -33,16 +31,17 @@
       <div class="container">
         <div class="row d-flex justify-content-center align-items-center min-vh-100">
           <div class="col-md-6 mt-2 mb-2">
-            <form action="/enchanted_elegance/login" id="loginForm" method="post" class="p-5 bg-white">
+            <form id="loginForm" class="form-container" action="/enchanted_elegance/login" method="post" novalidate>
               <h2 class="mb-4 site-section-heading">Login</h2>
 
+              <!-- Error message container -->
               <% if (request.getParameter("error") != null) { %>
                 <div class="server-error"><%= request.getParameter("error") %></div>
               <% } %>
 
               <div class="row form-group">
                 <div class="col-md-12">
-                  <label class="text-black" for="email">Email</label>
+                  <label class="text-black required" for="email">Email</label>
                   <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
                   <small class="error-message" id="emailError"></small>
                 </div>
@@ -50,20 +49,23 @@
 
               <div class="row form-group">
                 <div class="col-md-12">
-                  <label class="text-black" for="password">Password</label>
-                  <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                  <label class="text-black required" for="password">Password</label>
+                  <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                    required>
                   <small class="error-message" id="passwordError"></small>
                 </div>
               </div>
 
               <div class="row form-group">
                 <div class="col-md-12">
-                  <button type="submit" class="btn btn-primary py-2 px-4 text-white">Login</button>
+                  <input type="submit" value="Login" class="btn btn-primary py-2 px-4 text-white">
                 </div>
               </div>
               <div class="row form-group">
                 <div class="col-md-12 text-center">
-                  <p>Don't have an account? <a href="/enchanted_elegance/pages/customer/register.jsp" class="text-primary">Register here</a></p>
+                  <p>Don't have an account?
+                    <a href="/enchanted_elegance/pages/customer/register.jsp" class="text-primary">Register here</a>
+                  </p>
                 </div>
               </div>
             </form>
@@ -75,12 +77,10 @@
 
   <script src="/enchanted_elegance/pages/customer/js/jquery-3.3.1.min.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/bootstrap.min.js"></script>
-  <script src="/enchanted_elegance/pages/customer/js/main.js"></script>
-
-  <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
-
-  <script src="/enchanted_elegance/pages/customer/js/components/login.js"></script>
   
-  </script>
+  <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
+  <script src="/enchanted_elegance/pages/customer/js/components/login.js"></script>
+
 </body>
+
 </html>
