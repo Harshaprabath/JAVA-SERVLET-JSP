@@ -31,7 +31,10 @@
         </div>
         <div>
             <label >Message</label>
-            <textarea name="message" cols="30" rows="5" placeholder="Write your feedback here..." required></textarea>
+          <textarea id="message" name="message" cols="30" rows="10"
+                                    placeholder="Write your feedback here..."
+                                    maxlength="1000"
+                                    required></textarea>
         </div>
 
         <div>
