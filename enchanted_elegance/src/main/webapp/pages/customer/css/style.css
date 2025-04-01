@@ -6,6 +6,22 @@
 .p-3-5{
   padding: 2rem 3rem !important ;
 }
+
+.required::after {
+   content: " *";
+   color: red;
+}
+.error {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875em;
+  display: block;
+  margin-top: 5px;
+}
+
 .server-error {
   color: red;
   text-align: left;
@@ -13,11 +29,6 @@
   margin-bottom: 15px;
 }
 
-/* login and register */
-.login-register-bg {
-  background: url('./../images/hero_bg_2.jpg') no-repeat center center fixed !important;
-  background-size: cover !important;
-}
 
 /* Haeder custom styles */
 .single-line {

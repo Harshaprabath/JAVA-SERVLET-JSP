@@ -1,13 +1,8 @@
-.error {
-    border: 1px solid red;
+.login-register-bg {
+    background: url('./../images/hero_bg_2.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
 }
 
-.error-message {
-    color: red;
-    font-size: 0.875em;
-    display: block;
-    margin-top: 5px;
-}
 
 .login-register-bg {
     background-color: #f8f9fa;

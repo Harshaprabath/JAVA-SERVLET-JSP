@@ -45,7 +45,7 @@
 
                             <div class="row form-group">
                                 <div class="col-md-12">
-                                    <label class="text-black" for="name">Name</label>
+                                    <label class="text-black required" for="name">Name</label>
                                     <input type="text" id="name" name="name" class="form-control" 
                                            placeholder="Full Name" required value="<%= name %>">
                                     <small class="error-message" id="nameError"></small>
@@ -54,14 +54,14 @@
 
                             <div class="row form-group">
                                 <div class="col-md-6">
-                                    <label class="text-black" for="email">Email</label>
+                                    <label class="text-black required" for="email">Email</label>
                                     <input type="email" id="email" name="email" class="form-control" 
                                            placeholder="Email" required value="<%= email %>">
                                     <small class="error-message" id="emailError"></small>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="text-black" for="mobile">Mobile</label>
+                                    <label class="text-black required" for="mobile">Mobile</label>
                                     <input type="text" id="mobile" name="mobile" class="form-control" 
                                            placeholder="Mobile Number" required value="<%= mobile %>">
                                     <small class="error-message" id="mobileError"></small>
@@ -70,14 +70,14 @@
 
                             <div class="row form-group">
                                 <div class="col-md-6">
-                                    <label class="text-black" for="password">Password</label>
+                                    <label class="text-black required" for="password">Password</label>
                                     <input type="password" id="password" name="password" class="form-control" 
                                            placeholder="Password" required>
                                     <small class="error-message" id="passwordError"></small>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="text-black" for="confirmPassword">Confirm Password</label>
+                                    <label class="text-black required" for="confirmPassword">Confirm Password</label>
                                     <input type="password" id="confirmPassword" class="form-control" 
                                            placeholder="Confirm Password" required>
                                     <small class="error-message" id="confirmPasswordError"></small>
