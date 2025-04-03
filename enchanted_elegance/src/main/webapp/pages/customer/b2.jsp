@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.usermanagement.User" %>
+<%@ page import="com.enchantedelegance.models.bookingmanagement.Booking" %>
+<%@ page import="com.enchantedelegance.dao.bookingmanagement.BookingDAO" %>
 
 <%
     User user = (User) session.getAttribute("user");
@@ -7,6 +9,16 @@
     if (user == null) {
         response.sendRedirect("login.jsp?error=Please login first");
         return;
+    }
+    // Get Booking ID from URL
+    String bookingIdParam = request.getParameter("id");
+
+    Booking booking = new Booking();
+    BookingDAO bookingDAO = new BookingDAO();
+
+    if (bookingIdParam != null && !bookingIdParam.isEmpty()) {
+        int bookingId = Integer.parseInt(bookingIdParam);
+        booking = bookingDAO.getBookingById(bookingId); // Fetch booking from DB
     }
 %>
 
@@ -112,37 +124,25 @@
     </header>
 
 
-    <div class="slide-one-item home-slider owl-carousel">
-   
-      <div class="site-blocks-cover inner-page-cover" style="background-image: url(/enchanted_elegance/pages/customer/images/hero_bg_2.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
-        <div class="container">
-          <div class="row align-items-center justify-content-center text-center">
-
-            <div class="col-md-8" data-aos="fade-up" data-aos-delay="400">
-              <h2 class="text-white font-weight-light mb-2 display-1">Online Booking</h2>
-            </div>
-          </div>
-        </div>
-      </div>  
-
-    </div>
-
+  
     <div class="site-section bg-light">
       <div class="container">
         <div class="row">
           <div class="col-md-7 mb-5">
-            <form id="bookingForm" action="#" class="p-5 bg-white">
-              <h2 class="mb-4 site-section-heading">Book Now</h2>
-
+            <form id="bookingForm" action="/enchanted_elegance/edit-booking" method="post" class="p-5 bg-white">
+              <h2 class="mb-4 site-section-heading">Change Booking</h2>
+              
+              <input type="hidden"name="id" value="<%= booking.getId() %>">
+              
               <div class="row form-group">
                 <div class="col-md-6 mb-3 mb-md-0">
                   <label class="text-black required" for="name">Name</label>
-                  <input type="text" id="name" class="form-control" placeholder="Your Name">
+                  <input type="text" id="name" name="name" class="form-control" value="<%= booking.getName() %>" placeholder="Your Name">
                   <small id="nameError" class="text-danger error-message"></small>
                 </div>
                 <div class="col-md-6">
                   <label class="text-black required" for="mobile">Mobile</label>
-                  <input type="text" id="mobile" class="form-control" placeholder="Phone Number">
+                  <input type="text" id="mobile" name="mobile" class="form-control" value="<%= booking.getMobile() %>" placeholder="Phone Number">
                   <small id="mobileError" class="text-danger error-message"></small>
                 </div>
               </div>
@@ -150,12 +150,12 @@
               <div class="row form-group">
                 <div class="col-md-6">
                   <label class="text-black required" for="email">Email</label> 
-                  <input type="text" id="email" class="form-control" placeholder="Your Email">
+                  <input type="text" id="email" name="email" class="form-control" value="<%= booking.getEmail() %>" placeholder="Your Email">
                   <small id="emailError" class="text-danger error-message"></small>
                 </div>
                 <div class="col-md-6 mb-3 mb-md-0">
                   <label class="text-black required" for="date">Date</label> 
-                  <input type="text" id="date" class="form-control datepicker px-2" placeholder="Select date">
+                  <input type="text" id="date" name="date" class="form-control datepicker px-2" value="<%= booking.getDate() %>" placeholder="Select date">
                   <small id="dateError" class="text-danger error-message"></small>
                 </div>
               </div>
@@ -164,11 +164,11 @@
                 <div class="col-md-12">
                   <label class="text-black required" for="treatment">Service You Want</label> 
                   <select name="treatment" id="treatment" class="form-control">
-                    <option value="">Hair Cut</option>
-                    <option value="">Hair Coloring</option>
-                    <option value="">Shave</option>
-                    <option value="">Hair Conditioning</option>
-                    <option value="">Other</option>
+                      <option value="haircut" <%= "haircut".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Cut</option>
+                      <option value="coloring" <%= "coloring".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Coloring</option>
+                      <option value="shave" <%= "shave".equals(booking.getTreatment()) ? "selected" : "" %>>Shave</option>
+                      <option value="conditioning" <%= "conditioning".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Conditioning</option>
+                      <option value="other" <%= "other".equals(booking.getTreatment()) ? "selected" : "" %>>Other</option>
                   </select>
                   </select>
                   <small id="serviceError" class="text-danger error-message"></small>
@@ -178,7 +178,7 @@
               <div class="row form-group">
                 <div class="col-md-12">
                   <label class="text-black" for="note">Special Requests</label> 
-                  <textarea name="note" id="note" cols="30" rows="5" class="form-control" placeholder="Any special requirements or notes..."></textarea>
+                  <textarea name="note" id="note" cols="30" rows="5" class="form-control" placeholder="Any special requirements or notes..."><%= booking.getNote() %></textarea>
                 </div>
               </div>
 
@@ -313,102 +313,7 @@
   <!-- new add script  -->
   <script src="/enchanted_elegance/pages/customer/js/components/links.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
-
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const bookingForm = document.getElementById("bookingForm");
-      
-      if (bookingForm) {
-        bookingForm.addEventListener("submit", function(event) {
-          event.preventDefault();
-          let isValid = true;
-
-          // Validation functions
-          const validateName = (name) => {
-            return name.trim().length > 0;
-          };
-
-          const validateEmail = (email) => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-          };
-
-          const validatePhone = (phone) => {
-            const phoneRegex = /^[0-9]{10,15}$/;
-            return phoneRegex.test(phone);
-          };
-
-          const validateDate = (date) => {
-            return date.trim().length > 0;
-          };
-
-          const validateService = (service) => {
-            return service !== "";
-          };
-
-          // Clear previous errors
-          document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-          document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-
-          // Validate name
-          const nameInput = document.getElementById("name");
-          if (!validateName(nameInput.value)) {
-            document.getElementById("nameError").textContent = "Name is required";
-            nameInput.classList.add("error");
-            isValid = false;
-          }
-
-          // Validate mobile
-          const mobileInput = document.getElementById("mobile");
-          if (!validatePhone(mobileInput.value.trim())) {
-            document.getElementById("mobileError").textContent = "Valid phone number is required (10-15 digits)";
-            mobileInput.classList.add("error");
-            isValid = false;
-          }
-
-          // Validate date
-          const dateInput = document.getElementById("date");
-          if (!validateDate(dateInput.value)) {
-            document.getElementById("dateError").textContent = "Please select a date";
-            dateInput.classList.add("error");
-            isValid = false;
-          }
-
-          // Validate email
-          const emailInput = document.getElementById("email");
-          if (!emailInput.value.trim()) {
-            document.getElementById("emailError").textContent = "Email is required";
-            emailInput.classList.add("error");
-            isValid = false;
-          } else if (!validateEmail(emailInput.value.trim())) {
-            document.getElementById("emailError").textContent = "Please enter a valid email address";
-            emailInput.classList.add("error");
-            isValid = false;
-          }
-
-          // Validate service selection
-          const serviceInput = document.getElementById("treatment");
-          if (!validateService(serviceInput.value)) {
-            document.getElementById("serviceError").textContent = "Please select a service";
-            serviceInput.classList.add("error");
-            isValid = false;
-          }
-
-          // If all validations pass, submit the form
-          if (isValid) {
-            this.submit();
-          }
-        });
-      }
-
-      // Initialize datepicker
-      $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true,
-        startDate: new Date()
-      });
-    });
-  </script>
+  <script src="/enchanted_elegance/pages/customer/js/components/booking.js"></script>
+    
   </body>
 </html>
