@@ -1,31 +1,13 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.enchantedelegance.models.usermanagement.User" %>
-<%@ page import="com.enchantedelegance.models.bookingmanagement.Booking" %>
-<%@ page import="com.enchantedelegance.dao.bookingmanagement.BookingDAO" %>
-
 <%
     User user = (User) session.getAttribute("user");
-     
-    if (user == null) {
-        response.sendRedirect("login.jsp?error=Please login first");
-        return;
-    }
-    // Get Booking ID from URL
-    String bookingIdParam = request.getParameter("id");
-
-    Booking booking = new Booking();
-    BookingDAO bookingDAO = new BookingDAO();
-
-    if (bookingIdParam != null && !bookingIdParam.isEmpty()) {
-        int bookingId = Integer.parseInt(bookingIdParam);
-        booking = bookingDAO.getBookingById(bookingId); // Fetch booking from DB
-    }
 %>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Booking &mdash; Enchanted Elegance</title>
+    <title>Contact &mdash; Enchanted Elegance</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -123,90 +105,96 @@
 
     </header>
 
+    <div class="slide-one-item home-slider owl-carousel">
+   
+      <div class="site-blocks-cover inner-page-cover" style="background-image: url(/enchanted_elegance/pages/customer/images/hero_bg_2.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+        <div class="container">
+          <div class="row align-items-center justify-content-center text-center">
+
+            <div class="col-md-8" data-aos="fade-up" data-aos-delay="400">
+              <h2 class="text-white font-weight-light mb-2 display-1">Contact Us</h2>
+            </div>
+          </div>
+        </div>
+      </div>  
+
+    </div>
+
 
   
-    <div class="bg-light">
+    <div class="site-section bg-light">
       <div class="container">
         <div class="row">
-          <div class="col-md-7 mt-2 mb-5">
-            <form id="bookingForm" action="/enchanted_elegance/edit-booking" method="post" class="p-5 bg-white">
-              <h2 class="mb-4 site-section-heading">Change Booking</h2>
-              
-              <input type="hidden"name="id" value="<%= booking.getId() %>">
-              
-              <div class="row form-group">
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <label class="text-black required" for="name">Name</label>
-                  <input type="text" id="name" name="name" class="form-control" value="<%= booking.getName() %>" placeholder="Your Name">
-                  <small id="nameError" class="text-danger error-message"></small>
+          <div class="col-md-7 mb-5">
+            <form id="contactForm" action="../../add-contact" method="post" class="p-5 bg-white">
+                <h2 class="mb-4 site-section-heading">Contact</h2>
+                
+                <div class="row form-group">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="text-black required" for="name">Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
+                        <small id="nameError" class="text-danger error-message"></small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-black required" for="mobile">Mobile</label>
+                        <input type="text" id="mobile" name="mobile" class="form-control" placeholder="Phone Number">
+                        <small id="mobileError" class="text-danger error-message"></small>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                  <label class="text-black required" for="mobile">Mobile</label>
-                  <input type="text" id="mobile" name="mobile" class="form-control" value="<%= booking.getMobile() %>" placeholder="Phone Number">
-                  <small id="mobileError" class="text-danger error-message"></small>
+                
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label class="text-black required" for="email">Email</label> 
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Your Email">
+                        <small id="emailError" class="text-danger error-message"></small>
+                    </div>
                 </div>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-md-6">
-                  <label class="text-black required" for="email">Email</label> 
-                  <input type="text" id="email" name="email" class="form-control" value="<%= booking.getEmail() %>" placeholder="Your Email">
-                  <small id="emailError" class="text-danger error-message"></small>
+                
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label class="text-black required" for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject">
+                        <small id="subjectError" class="text-danger error-message"></small>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <label class="text-black required" for="date">Date</label> 
-                  <input type="text" id="date" name="date" class="form-control datepicker px-2" value="<%= booking.getDate() %>" placeholder="Select date">
-                  <small id="dateError" class="text-danger error-message"></small>
+                
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label class="text-black required" for="message">Message</label> 
+                        <textarea name="message" id="message" cols="30" rows="5" class="form-control" placeholder="Write your message or questions here..."></textarea>
+                        <small id="messageError" class="text-danger error-message"></small>
+                    </div>
                 </div>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-md-12">
-                  <label class="text-black required" for="treatment">Service You Want</label> 
-                  <select name="treatment" id="treatment" class="form-control">
-                      <option value="haircut" <%= "haircut".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Cut</option>
-                      <option value="coloring" <%= "coloring".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Coloring</option>
-                      <option value="shave" <%= "shave".equals(booking.getTreatment()) ? "selected" : "" %>>Shave</option>
-                      <option value="conditioning" <%= "conditioning".equals(booking.getTreatment()) ? "selected" : "" %>>Hair Conditioning</option>
-                      <option value="other" <%= "other".equals(booking.getTreatment()) ? "selected" : "" %>>Other</option>
-                  </select>
-                  </select>
-                  <small id="serviceError" class="text-danger error-message"></small>
+                
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="Send" class="btn btn-primary py-2 px-4 text-white">
+                    </div>
                 </div>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-md-12">
-                  <label class="text-black" for="note">Special Requests</label> 
-                  <textarea name="note" id="note" cols="30" rows="5" class="form-control" placeholder="Any special requirements or notes..."><%= booking.getNote() %></textarea>
-                </div>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-md-12">
-                  <input type="submit" value="Book Appointment" class="btn btn-primary py-2 px-4 text-white">
-                </div>
-              </div>
             </form>
           </div>
           <div class="col-md-5">
+            
             <div class="p-4 mb-3 bg-white">
-              <h3 class="h5 text-black mb-3">Contact Info</h3>
               <p class="mb-0 font-weight-bold">Address</p>
-              <p class="mb-4">123 Beauty Street, Salon District, New York, USA</p>
+              <p class="mb-4">203 Fake St. Mountain View, San Francisco, California, USA</p>
 
               <p class="mb-0 font-weight-bold">Phone</p>
-              <p class="mb-4"><a href="tel:+1234567890">+1 (234) 567-890</a></p>
+              <p class="mb-4"><a href="#">+1 232 3235 324</a></p>
 
               <p class="mb-0 font-weight-bold">Email Address</p>
-              <p class="mb-0"><a href="mailto:bookings@enchanted-elegance.com">bookings@enchanted-elegance.com</a></p>
+              <p class="mb-0"><a href="#">info@enchanted-elegance.com</a></p>
+
             </div>
             
             <div class="p-4 mb-3 bg-white">
-              <h3 class="h5 text-black mb-3">Booking Policy</h3>
-              <p>We require at least 24 hours notice for cancellations. Late cancellations or no-shows may be subject to a fee of 50% of the service price.</p>
-              <p>Please arrive 10 minutes before your appointment time.</p>
+              <h3 class="h5 text-black mb-3">More Info</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ad iure porro mollitia architecto hic consequuntur. Distinctio nisi perferendis dolore, ipsa consectetur? Fugiat quaerat eos qui, libero neque sed nulla.</p>
+              <p><a href="#" class="btn btn-primary px-4 py-2 text-white">Learn More</a></p>
             </div>
+
+          </div>
+            
           </div>
         </div>
       </div>
@@ -313,7 +301,8 @@
   <!-- new add script  -->
   <script src="/enchanted_elegance/pages/customer/js/components/links.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
-  <script src="/enchanted_elegance/pages/customer/js/components/booking.js"></script>
+  <script src="/enchanted_elegance/pages/customer/js/components/contact.js"></script>
+  
     
   </body>
 </html>

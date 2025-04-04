@@ -47,7 +47,7 @@ public class AddContactServlet extends HttpServlet {
 
         if (isAdded) {
             // Redirect to contact page after successful sent
-            resp.sendRedirect("pages/customer/contact.jsp??success=Send+successful");
+            resp.sendRedirect("pages/customer/contact.jsp?success=Send+successful");
         } else {
             // Stay on contact page if an error occurs
             resp.sendRedirect("pages/customer/contact.jsp?error=Send+failed,+try+again");

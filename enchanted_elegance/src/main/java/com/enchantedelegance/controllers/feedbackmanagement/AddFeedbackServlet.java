@@ -72,7 +72,7 @@ public class AddFeedbackServlet extends HttpServlet {
 
         if (isAdded) {
             // Redirect to feedback page after successful sent
-            resp.sendRedirect("pages/customer/feedback.jsp??success=Send+successful");
+            resp.sendRedirect("pages/customer/feedback.jsp?success=Send+successful");
         } else {
             // Stay on feedback page if an error occurs
             resp.sendRedirect("pages/customer/feedback.jsp?error=Send+failed,+try+again");
