@@ -66,9 +66,9 @@
 
               <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
                 <li><a id="homeLink">Home</a></li>
-                <li class="active"><a id="servicesLink">Services</a></li>
+                <li><a id="servicesLink">Services</a></li>
                 <li><a id="haircutLink">Haircut</a></li>
-                <li><a id="bookLink">Book Online</a></li>
+                <li class="active"><a id="bookLink">Book Online</a></li>
                 <li><a id="contactLink">Contact</a></li>
                 <li><a id="aboutLink">About</a></li>
                 <li><a id="feedbackLink">FeedBack</a></li>
@@ -202,7 +202,7 @@
               <p class="mb-4"><a href="tel:+1234567890">+1 (234) 567-890</a></p>
 
               <p class="mb-0 font-weight-bold">Email Address</p>
-              <p class="mb-0"><a href="mailto:bookings@enchanted-elegance.com">bookings@enchanted-elegance.com</a></p>
+              <p class="mb-0"><a href="mailto:bookings@enchanted-elegance.com">info@enchanted-elegance.com</a></p>
             </div>
             
             <div class="p-4 mb-3 bg-white">
