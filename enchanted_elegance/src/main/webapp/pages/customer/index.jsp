@@ -61,12 +61,18 @@
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
 
   <!-- new add styles -->
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/loader.css">
   <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/custom.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body>
 
+
+<body>
+  <div class="enchanted-loader-container">
+        <div class="enchanted-loader"></div>
+  </div>
+  <div class="enchanted-main-content" style="display: none;">
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -408,7 +414,7 @@
         </div>
       </div>
     </footer>
-
+    </div>
   </div>
 
   <script src="/enchanted_elegance/pages/customer/js/jquery-3.3.1.min.js"></script>
@@ -426,6 +432,7 @@
   <script src="/enchanted_elegance/pages/customer/js/main.js"></script>
 
   <!-- home page script  -->
+  <script src="/enchanted_elegance/pages/customer/js/components/loader.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/components/home.js"></script>
 
   <!-- new add script  -->

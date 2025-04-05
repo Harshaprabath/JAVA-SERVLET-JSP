@@ -1,0 +1,87 @@
+/* Centering the loader */
+.enchanted-loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    background-color: #f4f4f4;
+    flex-direction: column;
+    font-size: 24px;
+    color: black;
+    text-align: center;
+}
+
+.enchanted-loader {
+    width: fit-content;
+    font-size: 40px;
+    font-family: monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #0000;
+    -webkit-text-stroke: 1px #8bc34a;
+    --g: conic-gradient(#8bc34a 0 0) no-repeat text;
+    background: var(--g) 0ch, var(--g) 1ch, var(--g) 2ch, var(--g) 3ch, var(--g) 4ch, var(--g) 5ch, var(--g) 6ch, var(--g) 7ch, var(--g) 8ch, var(--g) 9ch, var(--g) 10ch, var(--g) 11ch, var(--g) 12ch, var(--g) 13ch, var(--g) 14ch, var(--g) 15ch, var(--g) 16ch, var(--g) 17ch, var(--g) 18ch, var(--g) 19ch, var(--g) 20ch, var(--g) 21ch, var(--g) 22ch, var(--g) 23ch, var(--g) 24ch, var(--g) 25ch;
+    animation:
+        enchanted-loader-wave 1.5s linear infinite alternate,
+        enchanted-loader-position 3s linear infinite;
+}
+
+.enchanted-loader:before {
+    content: "Enchanted Elegance";
+}
+
+@keyframes enchanted-loader-wave {
+    0% {
+        background-size: 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0, 1ch 0
+    }
+
+    25% {
+        background-size: 1ch 100%, 1ch 50%, 1ch 0, 1ch 0, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 0, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 0, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 0, 1ch 0
+    }
+
+    50% {
+        background-size: 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 0, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%
+    }
+
+    75% {
+        background-size: 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 50%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%
+    }
+
+    to {
+        background-size: 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%, 1ch 100%
+    }
+}
+
+@keyframes enchanted-loader-position {
+
+    0%,
+    50% {
+        background-position-y: 100%
+    }
+
+    50.01%,
+    to {
+        background-position-y: 0
+    }
+}
+
+.enchanted-content {
+    display: none;
+}
+
+/* Add fade-out animation */
+@keyframes enchanted-fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.enchanted-fade-out {
+    animation: enchanted-fade-out 0.5s ease forwards;
+}
