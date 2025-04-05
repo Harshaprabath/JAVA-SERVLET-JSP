@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
     function getUrlParameter(name) {
         return new URLSearchParams(window.location.search).get(name)
             ? decodeURIComponent(new URLSearchParams(window.location.search).get(name).replace(/\+/g, ' '))
