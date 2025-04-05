@@ -1,41 +1,54 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.usermanagement.User" %>
+<%@ page import="com.enchantedelegance.models.bookingmanagement.Booking" %>
+<%@ page import="java.util.List" %>
+
 <%
     User user = (User) session.getAttribute("user");
+    if (user == null) {
+        response.sendRedirect("login.jsp?error=Please login first");
+        return;
+    }
+
 %>
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Contact &mdash; Enchanted Elegance</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700"> 
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/icomoon/style.css">
+<head>
+  <title>My Bookings &mdash; Enchanted Elegance</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/magnific-popup.css">
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/jquery-ui.css">
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.theme.default.min.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/icomoon/style.css">
 
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap-datepicker.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/magnific-popup.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/jquery-ui.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.carousel.min.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.theme.default.min.css">
 
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/flaticon/font/flaticon.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap-datepicker.css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/flaticon/font/flaticon.css">
 
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/aos.css">
-    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
 
-    <!-- new add styles -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/aos.css">
 
-    
-  </head>
-  <body>
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
   
+  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/custom.css">
+  
+  <!-- new add styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -60,7 +73,7 @@
 
               <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
                 <li><a id="homeLink">Home</a></li>
-                <li class="active"><a id="servicesLink">Services</a></li>
+                <li><a id="servicesLink">Services</a></li>
                 <li><a id="haircutLink">Haircut</a></li>
                 <li><a id="bookLink">Book Online</a></li>
                 <li><a id="contactLink">Contact</a></li>
@@ -87,7 +100,7 @@
                   </a>
                   <ul class="authenticate-user-dropdown-menu">
                     <li><a href="/enchanted_elegance/profile?id=<%= user.getId() %>" class="authenticate-user-dropdown-item">Profile</a></li>
-                    <li><a id="myBookinsLink" class="authenticate-user-dropdown-item">Bookings</a></li>
+                    <li class="active"><a id="myBookinsLink" class="authenticate-user-dropdown-item">Bookings</a></li>
                     <li><a id="logoutLink" class="authenticate-user-dropdown-item">Logout</a></li>
                   </ul>
                 </li>
@@ -105,112 +118,64 @@
 
     </header>
 
-    <div class="slide-one-item home-slider owl-carousel">
-   
-      <div class="site-blocks-cover inner-page-cover" style="background-image: url(/enchanted_elegance/pages/customer/images/hero_bg_2.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
-        <div class="container">
-          <div class="row align-items-center justify-content-center text-center">
-
-            <div class="col-md-8" data-aos="fade-up" data-aos-delay="400">
-              <h2 class="text-white font-weight-light mb-2 display-1">Contact Us</h2>
-            </div>
-          </div>
-        </div>
-      </div>  
-
-    </div>
-
-
-  
-    <div class="site-section bg-light">
+    <div class="bg-light">
       <div class="container">
         <div class="row">
-          <div class="col-md-7 mb-5">
-            <form id="contactForm" action="../../add-contact" method="post" class="p-5 bg-white">
-                <h2 class="mb-4 site-section-heading">Contact</h2>
-                
-                <div class="row form-group">
-                    <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="text-black required" for="name">Name</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
-                        <small id="nameError" class="text-danger error-message"></small>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="text-black required" for="mobile">Mobile</label>
-                        <input type="text" id="mobile" name="mobile" class="form-control" placeholder="Phone Number">
-                        <small id="mobileError" class="text-danger error-message"></small>
-                    </div>
-                </div>
-                
-                <div class="row form-group">
-                    <div class="col-md-12">
-                        <label class="text-black required" for="email">Email</label> 
-                        <input type="text" id="email" name="email" class="form-control" placeholder="Your Email">
-                        <small id="emailError" class="text-danger error-message"></small>
-                    </div>
-                </div>
-                
-                <div class="row form-group">
-                    <div class="col-md-12">
-                        <label class="text-black required" for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject">
-                        <small id="subjectError" class="text-danger error-message"></small>
-                    </div>
-                </div>
-                
-                <div class="row form-group">
-                    <div class="col-md-12">
-                        <label class="text-black required" for="message">Message</label> 
-                        <textarea name="message" id="message" cols="30" rows="5" class="form-control" placeholder="Write your message or questions here..."></textarea>
-                        <small id="messageError" class="text-danger error-message"></small>
-                    </div>
-                </div>
-                
-                <div class="row form-group">
-                    <div class="col-md-12">
-                        <input type="submit" value="Send" class="btn btn-primary py-2 px-4 text-white">
-                    </div>
-                </div>
-            </form>
+          <div class="col-md-12 mt-2 mb-2">
+            <h2 class="mb-4 site-section-heading">All Bookings</h2>
+            <div class="bl-table-container">
+              <table class="bl-table">
+                  <thead class="bl-thead">
+                      <tr>
+                          <th class="bl-th">Name</th>
+                          <th class="bl-th">Mobile</th>
+                          <th class="bl-th">Email</th>
+                          <th class="bl-th">Treatment</th>
+                          <th class="bl-th">Booking Date</th>
+                          <th class="bl-th">Note</th>
+                          <th class="bl-th">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody class="bl-tbody">
+                    <%
+                        List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
+                        if (bookings != null && !bookings.isEmpty()) {
+                            for (Booking booking : bookings) {
+                    %>        
+                      <tr>
+                          <td class="bl-td"><%= booking.getName() %></td>
+                          <td class="bl-td"><%= booking.getMobile() %></td>
+                          <td class="bl-td"><%= booking.getEmail() %></td>
+                          <td class="bl-td"><%= booking.getTreatment() %></td>
+                          <td class="bl-td"><%= booking.getDate() %></td>
+                          <td class="bl-td"><%= booking.getNote() %></td>
+                          <td class="bl-td-action">
+                              <button href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></button>
+                              
+                              <form action="delete-booking" method="post" style="display:inline;">               
+                                 <input type="hidden" name="id" value="<%= booking.getId() %>">
+                                 <input type="hidden" name="from" value="user">
+                                 <button type="submit" onclick="return confirm('Are you sure?')" class="bl-btn bl-delete"><i class="fa fa-trash"></i></button>
+                              </form>
+
+                          </td>                 
+                      </tr>
+                      <%
+                              }
+                          } else {
+                      %>
+                      <tr>
+                        <td class="bl-td" colspan="9">No bookings found.</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+              </table>
           </div>
-          <div class="col-md-5">
-            
-            <div class="p-4 mb-3 bg-white">
-              <p class="mb-0 font-weight-bold">Address</p>
-              <p class="mb-4">203 Fake St. Mountain View, San Francisco, California, USA</p>
-
-              <p class="mb-0 font-weight-bold">Phone</p>
-              <p class="mb-4"><a href="#">+1 232 3235 324</a></p>
-
-              <p class="mb-0 font-weight-bold">Email Address</p>
-              <p class="mb-0"><a href="#">info@enchanted-elegance.com</a></p>
-
-            </div>
-            
-            <div class="p-4 mb-3 bg-white">
-              <h3 class="h5 text-black mb-3">More Info</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ad iure porro mollitia architecto hic consequuntur. Distinctio nisi perferendis dolore, ipsa consectetur? Fugiat quaerat eos qui, libero neque sed nulla.</p>
-              <p><a href="#" class="btn btn-primary px-4 py-2 text-white">Learn More</a></p>
-            </div>
-
-          </div>
-            
           </div>
         </div>
       </div>
     </div>
-
-
-    <div class="site-section">
-      <div class="container">
-        <div class="row text-center">
-          <div class="col-md-12">
-            <h2 class="mb-4 text-black">We want your hair to look fabulous</h2>
-            <p class="mb-0"><a href="#" class="btn btn-primary py-3 px-5 text-white">Visit Our Salon Now</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
+     </div>
 
     <footer id="footer" class="site-footer">
       <div class="container">
@@ -296,13 +261,12 @@
   <script src="/enchanted_elegance/pages/customer/js/jquery.magnific-popup.min.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/bootstrap-datepicker.min.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/aos.js"></script>
+
   <script src="/enchanted_elegance/pages/customer/js/main.js"></script>
 
   <!-- new add script  -->
   <script src="/enchanted_elegance/pages/customer/js/components/links.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
-  <script src="/enchanted_elegance/pages/customer/js/components/contact.js"></script>
-  
-    
-  </body>
+
+</body>
 </html>

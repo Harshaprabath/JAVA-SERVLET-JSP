@@ -78,7 +78,7 @@
 
               <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
                 <li><a id="homeLink">Home</a></li>
-                <li class="active"><a id="servicesLink">Services</a></li>
+                <li><a id="servicesLink">Services</a></li>
                 <li><a id="haircutLink">Haircut</a></li>
                 <li><a id="bookLink">Book Online</a></li>
                 <li><a id="contactLink">Contact</a></li>
@@ -100,12 +100,12 @@
                 </li>
                 <% } else { // If user is logged in %>
                 <li class="authenticate-user-dropdown">
-                  <a href="#" class="authenticate-user-dropdown-trigger pl-3 pr-3 text-black">
-                    <i class="fa fa-user authenticate-user-icon-mr"></i> <%= user.getName() %>
+                  <a href="#" class="authenticate-user-dropdown-trigger pl-3 pr-3 auth-active">
+                    <i class="fa fa-user authenticate-user-icon-mr "></i> <%= user.getName() %>
                   </a>
                   <ul class="authenticate-user-dropdown-menu">
                     <li><a href="/enchanted_elegance/profile?id=<%= user.getId() %>" class="authenticate-user-dropdown-item">Profile</a></li>
-                    <li><a id="myBookinsLink" class="authenticate-user-dropdown-item">Bookings</a></li>
+                    <li><a id="myBookinsLink" class="authenticate-user-dropdown-item auth-active">Bookings</a></li>
                     <li><a id="logoutLink" class="authenticate-user-dropdown-item">Logout</a></li>
                   </ul>
                 </li>

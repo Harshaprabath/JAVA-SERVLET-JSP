@@ -3,14 +3,32 @@
 .min-vh-100{
   min-height: 100vb;
 }
+
 .p-3-5{
   padding: 2rem 3rem !important ;
+}
+
+#loginLink:hover{
+  color: #8bc34a !important;
+}
+
+#registerLink:hover{
+  color: #8bc34a !important;
+}
+
+.authenticate-user-dropdown-trigger:hover{
+  color: #8bc34a !important;
+}
+
+.auth-active {
+  color: #8bc34a !important;
 }
 
 .required::after {
    content: " *";
    color: red;
 }
+
 .error {
   border: 1px solid red;
 }
