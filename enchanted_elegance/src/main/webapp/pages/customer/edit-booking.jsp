@@ -190,7 +190,7 @@
             </form>
           </div>
           <div class="col-md-5">
-            <div class="p-4 mb-3 bg-white">
+            <div class="p-4 mb-3 mt-2 bg-white">
               <h3 class="h5 text-black mb-3">Contact Info</h3>
               <p class="mb-0 font-weight-bold">Address</p>
               <p class="mb-4">123 Beauty Street, Salon District, New York, USA</p>

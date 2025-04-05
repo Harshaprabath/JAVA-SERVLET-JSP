@@ -1,54 +1,63 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.usermanagement.User" %>
-<%@ page import="com.enchantedelegance.models.bookingmanagement.Booking" %>
-<%@ page import="java.util.List" %>
+<%@ page import="com.enchantedelegance.dao.usermanagement.UserDAO" %>
 
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null) {
-        response.sendRedirect("login.jsp?error=Please login first");
-        return;
+    UserDAO userDAO = new UserDAO();
+
+    // Get user ID from URL (if available)
+    String userIdParam = request.getParameter("id");
+    User user = null;
+
+    if (userIdParam != null && !userIdParam.isEmpty()) {
+        int userId = Integer.parseInt(userIdParam);
+        user = userDAO.getUserById(userId); // Fetch user from DB
     }
 
+    // If no user from URL, use session user
+    if (user == null) {
+        user = (User) session.getAttribute("user");
+    }
+
+    // If no user found, redirect to login
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
 %>
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Profile &mdash; Enchanted Elegance</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<head>
-  <title>My Bookings &mdash; Enchanted Elegance</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700"> 
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/icomoon/style.css">
 
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700">
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/magnific-popup.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/jquery-ui.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.theme.default.min.css">
 
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/magnific-popup.css">
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/jquery-ui.css">
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.carousel.min.css">
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap-datepicker.css">
 
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/flaticon/font/flaticon.css">
 
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/aos.css">
+    <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
 
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/aos.css">
+    <!-- new add styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/style.css">
+    
+  </head>
+  <body>
   
-  <link rel="stylesheet" href="/enchanted_elegance/pages/customer/css/custom.css">
-  
-  <!-- new add styles -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-</head>
-
-<body>
-
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -95,12 +104,12 @@
                 </li>
                 <% } else { // If user is logged in %>
                 <li class="authenticate-user-dropdown">
-                  <a href="#" class="authenticate-user-dropdown-trigger pl-3 pr-3 text-black">
+                  <a href="#" class="authenticate-user-dropdown-trigger pl-3 pr-3 auth-active">
                     <i class="fa fa-user authenticate-user-icon-mr"></i> <%= user.getName() %>
                   </a>
                   <ul class="authenticate-user-dropdown-menu">
-                    <li><a href="/enchanted_elegance/profile?id=<%= user.getId() %>" class="authenticate-user-dropdown-item">Profile</a></li>
-                    <li class="active"><a id="myBookinsLink" class="authenticate-user-dropdown-item">Bookings</a></li>
+                    <li><a href="/enchanted_elegance/profile?id=<%= user.getId() %>" class="authenticate-user-dropdown-item auth-active">Profile</a></li>
+                    <li><a id="myBookinsLink" class="authenticate-user-dropdown-item">Bookings</a></li>
                     <li><a id="logoutLink" class="authenticate-user-dropdown-item">Logout</a></li>
                   </ul>
                 </li>
@@ -117,65 +126,115 @@
       </div>
 
     </header>
-
+   
     <div class="bg-light">
       <div class="container">
         <div class="row">
-          <div class="col-md-12 mt-2 mb-2">
-            <h2 class="mb-4 site-section-heading">All Bookings</h2>
-            <div class="bl-table-container">
-              <table class="bl-table">
-                  <thead class="bl-thead">
-                      <tr>
-                          <th class="bl-th">Name</th>
-                          <th class="bl-th">Mobile</th>
-                          <th class="bl-th">Email</th>
-                          <th class="bl-th">Treatment</th>
-                          <th class="bl-th">Booking Date</th>
-                          <th class="bl-th">Note</th>
-                          <th class="bl-th">Action</th>
-                      </tr>
-                  </thead>
-                  <tbody class="bl-tbody">
-                    <%
-                        List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
-                        if (bookings != null && !bookings.isEmpty()) {
-                            for (Booking booking : bookings) {
-                    %>        
-                      <tr>
-                          <td class="bl-td"><%= booking.getName() %></td>
-                          <td class="bl-td"><%= booking.getMobile() %></td>
-                          <td class="bl-td"><%= booking.getEmail() %></td>
-                          <td class="bl-td"><%= booking.getTreatment() %></td>
-                          <td class="bl-td"><%= booking.getDate() %></td>
-                          <td class="bl-td"><%= booking.getNote() %></td>
-                          <td class="bl-td-action">
-                              <button href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></button>
-                              
-                              <form action="delete-booking" method="post" style="display:inline;">               
-                                 <input type="hidden" name="id" value="<%= booking.getId() %>">
-                                 <input type="hidden" name="from" value="user">
-                                 <button type="submit" onclick="return confirm('Are you sure?')" class="bl-btn bl-delete"><i class="fa fa-trash"></i></button>
-                              </form>
-
-                          </td>                 
-                      </tr>
-                      <%
-                              }
-                          } else {
-                      %>
-                      <tr>
-                        <td class="bl-td" colspan="9">No bookings found.</td>
-                      </tr>
-                    <% } %>
-                  </tbody>
-              </table>
+          <div class="col-md-7 mt-3 mb-5">
+            <div class="p-5 bg-white">
+             <form id="editProfileForm" class="form-container" action="/enchanted_elegance/edit-profile" method="post" novalidate>
+                <h2 class="mb-4 site-section-heading">Edit Profile</h2>
+                <div class="row form-group">
+                 <input type="hidden" name="id" value="<%= user.getId() %>">
+                 <div class="col-md-12">
+                         <label class="text-black required" for="name">Name</label>
+                         <input type="text" id="name" name="name" class="form-control" 
+                                placeholder="Full Name" required value=<%= user.getName() %>>
+                         <small class="error-message" id="nameError"></small>
+                     </div>
+                 </div>
+                 <div class="row form-group">
+                     <div class="col-md-6">
+                         <label class="text-black required" for="mobile">Mobile</label>
+                         <input type="text" id="mobile" name="mobile" class="form-control" 
+                                placeholder="Mobile Number" required value=<%= user.getMobile() %>>
+                         <small class="error-message" id="mobileError"></small>
+                     </div>
+                     <div class="col-md-6">
+                         <label class="text-black required" for="email">Email</label>
+                         <input type="email" id="email" name="email" class="form-control" 
+                                placeholder="Email" required value=<%= user.getEmail() %>>
+                         <small class="error-message" id="emailError"></small>
+                     </div>
+                 </div>
+                 <div class="row form-group">
+                     <div class="col-md-6">
+                         <label class="text-black required" for="password">Password</label>
+                         <input type="password" id="password" name="password" class="form-control" 
+                                placeholder="Password" required>
+                         <small class="error-message" id="passwordError"></small>
+                     </div>
+                     <div class="col-md-6">
+                         <label class="text-black required" for="confirmPassword">Confirm Password</label>
+                         <input type="password" id="confirmPassword" class="form-control" 
+                                placeholder="Confirm Password" required>
+                         <small class="error-message" id="confirmPasswordError"></small>
+                     </div>
+                 </div>
+                 <div class="row form-group">
+                     <div class="col-md-12">
+                         <input type="submit" value="Save Changes" class="btn btn-primary py-2 px-4 text-white">
+                     </div>
+                 </div>
+             </form>   
+            </div>
           </div>
+
+          <div class="col-md-5">
+          <div class="p-4 mb-3 mt-3 bg-white">
+            <h3 class="h5 text-black mb-3"><i class="fa fa-cog mr-1 fa-spin "></i>Account Settings</h3>
+            <div class="row">
+                <% if (session.getAttribute("user") != null) { %>
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <p><a href="/enchanted_elegance/profile?id=<%= user.getId() %>" class="btn btn-primary px-4 py-2 text-white col-md-12"><i class="fa fa-user mr-1"></i>Profile</a></p>                   
+                    </div>
+                <% } %>
+                <% if (session.getAttribute("user") != null) { %>
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <form action="/enchanted_elegance/delete-account" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                        <input type="hidden" name="id" value="<%= user.getId() %>">
+                            <p><button type="submit" class="btn btn-danger px-4 py-2 text-white col-md-12"><i class="fa fa-trash mr-1"></i>Delete Account</button></p>                       
+                    </form>
+                </div>     
+                <% } %>
+                <div class="col-md-12 mb-3 mb-md-0">
+                    <p><a href="../../logout" class="btn btn-dark px-4 py-2 text-white col-md-12"><i class="fa fa-sign-out mr-1"></i>Logout</a></p>                   
+                </div>
+            </div>         
+         </div>
+            
+            <div class="p-4 mb-3 mt-3 bg-white">
+              <p class="mb-0 font-weight-bold">New Booking</p>
+              <p class="mb-4"><a href="booking.jsp">Click Here</a></p>
+
+              <p class="mb-0 font-weight-bold">My All Bookings</p>
+              <p class="mb-4"><a href="../../booking-list">Click Here</a></p>
+              
+              <p class="mb-0 font-weight-bold">Contact Enchanted Elegance</p>
+              <p class="mb-4"><a href="contact.jsp">Click Here</a></p>
+      
+              <p class="mb-0 font-weight-bold">Give Feedback</p>
+              <p class="mb-0"><a href="feedback.jsp">Click Here</a></p>
+
+            </div>
+          </div>
+            
           </div>
         </div>
       </div>
     </div>
-     </div>
+
+
+    <div class="site-section">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12">
+            <h2 class="mb-4 text-black">We want your hair to look fabulous</h2>
+            <p class="mb-0"><a href="#" class="btn btn-primary py-3 px-5 text-white">Visit Our Salon Now</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer id="footer" class="site-footer">
       <div class="container">
@@ -261,12 +320,13 @@
   <script src="/enchanted_elegance/pages/customer/js/jquery.magnific-popup.min.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/bootstrap-datepicker.min.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/aos.js"></script>
-
   <script src="/enchanted_elegance/pages/customer/js/main.js"></script>
 
   <!-- new add script  -->
   <script src="/enchanted_elegance/pages/customer/js/components/links.js"></script>
   <script src="/enchanted_elegance/pages/customer/js/components/alert.js"></script>
-
-</body>
+  <script src="/enchanted_elegance/pages/customer/js/components/edit-profile.js"></script>
+  
+    
+  </body>
 </html>
