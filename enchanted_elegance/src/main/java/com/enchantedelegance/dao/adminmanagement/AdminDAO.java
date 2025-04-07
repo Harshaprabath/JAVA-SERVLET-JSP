@@ -159,7 +159,7 @@ public class AdminDAO {
     public void defaultAdmin() {
         List<Admin> admins = getAllAdmins();
         if (admins.isEmpty()) {
-            Admin defaultAdmin = new Admin(1, "Default Admin", "1234567890", "admin@example.com", "admin123");
+            Admin defaultAdmin = new Admin(1, "Admin", "1234567890", "admin@example.com", "admin123");
             addAdmin(defaultAdmin);
         }
     }

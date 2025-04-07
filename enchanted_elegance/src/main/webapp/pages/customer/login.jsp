@@ -4,7 +4,7 @@
 <%
     User user = (User) session.getAttribute("user");
     if (user != null) {
-        response.sendRedirect("/enchanted_elegance/pages/customer/index.jsp");
+        response.sendRedirect("/enchanted_elegance/pages/customer/index.jsp?error=Already login");
         return;
     }
 

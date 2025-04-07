@@ -157,15 +157,16 @@
                     <div class="col-md-6 mb-3 mb-md-0">
                         <form action="/enchanted_elegance/delete-account" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
                             <input type="hidden" name="id" value="<%= user.getId() %>">
-                                <p><button type="submit" class="btn btn-danger px-4 py-2 text-white col-md-12"><i class="fa fa-trash mr-1"></i>Delete Account</button></p>                       
+                            <input type="hidden" name="from" value="user">
+                            <p><button type="submit" class="btn btn-danger px-4 py-2 text-white col-md-12"><i class="fa fa-trash mr-1"></i>Delete Account</button></p>                       
                         </form>
                     </div>     
                     <% } %>
                     <div class="col-md-12 mb-3 mb-md-0">
                         <p><a href="logout" class="btn btn-dark px-4 py-2 text-white col-md-12"><i class="fa fa-sign-out mr-1"></i>Logout</a></p>                   
                     </div>
-            </div>         
-         </div>
+              </div>         
+           </div>
             
             <div class="p-4 mb-3 mt-3 bg-white">
               <p class="mb-0 font-weight-bold">New Booking</p>

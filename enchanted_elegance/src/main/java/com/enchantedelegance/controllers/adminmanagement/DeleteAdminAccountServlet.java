@@ -45,8 +45,8 @@ public class DeleteAdminAccountServlet extends HttpServlet {
         if (adminDAO.deleteAdminById(adminId)) {
             // Invalidate session only if the session user deleted their own account
             if (sessionAdmin != null && sessionAdmin.getId() == adminId) {
-                session.invalidate();
-                resp.sendRedirect("../admin/profile?message=Account deleted successfully");
+                session.removeAttribute("admin");
+                resp.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?message=Account deleted successfully");
             } else {
                 resp.sendRedirect("../admin/admin-list?message=Admin deleted successfully");
             }
