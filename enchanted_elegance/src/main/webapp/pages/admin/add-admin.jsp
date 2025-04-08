@@ -200,7 +200,7 @@
             <div class="card">
               <div class="card-body p-4 p-md-5">
                 <h2 class="mb-3 mb-md-3">Add New Admin</h2>
-                <form id="adminForm" class="w-100" action="../../admin/add-admin" method="post">
+                <form id="adminAddForm" class="w-100" action="/enchanted_elegance/admin/add-admin" method="post">
                 <div class="row g-3">                   
                     <div class="col-12">                   
                     <div class="form-floating">
@@ -259,7 +259,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
-  <script src="/enchanted_elegance/pages/admin/js/admin-form.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/admin-add-form.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 // Admin forms validation
-document.getElementById('adminForm').addEventListener('submit', function (event) {
+document.getElementById('adminAddForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
     // Reset previous errors

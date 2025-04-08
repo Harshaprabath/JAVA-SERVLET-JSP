@@ -1,22 +1,60 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
+<%@ page import="com.enchantedelegance.dao.adminmanagement.AdminDAO" %>
 <%
-    Admin admin = (Admin) session.getAttribute("admin");
-      if (admin == null) {
-            response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first"); // Redirect to the login page if not logged in
-            return;
-        }
-%>
+    Admin sessionAdmin = (Admin) session.getAttribute("admin");
+    
+    Admin admin=null;
 
+    if (sessionAdmin == null) {
+        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
+        return;
+    }
+    
+    boolean isOwnReq = false;
+    AdminDAO adminDAO = new AdminDAO(); // Initialize adminDAO
+    
+    // Get admin ID from URL
+    String adminIdParam = request.getParameter("id");
+   
+    if (adminIdParam != null && !adminIdParam.isEmpty()) {
+        int adminId = Integer.parseInt(adminIdParam);
+        admin = adminDAO.getAdminById(adminId); // Fetch admin from DB
+    }
+    if(admin == null){
+        response.sendRedirect("/enchanted_elegance/admin/admin-list?error=Admin not found");
+        return;
+    }
+    // Compare IDs properly
+    if (admin != null && adminIdParam != null && !adminIdParam.isEmpty()) {
+        try {
+            int paramId = Integer.parseInt(adminIdParam);
+            isOwnReq = (paramId == sessionAdmin.getId());
+        } catch (NumberFormatException e) {
+            // Handle invalid number format
+            isOwnReq = false;
+        }
+    }
+     
+    // If no admin from URL, use session admin
+    if (admin == null) {
+        admin = (Admin) session.getAttribute("admin");
+    }
+    
+    
+%>
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add Admin &mdash; Enchanted Elegance</title>
+  <% if (isOwnReq) { %>
+      <title>Edit Profile &mdash; Enchanted Elegance</title>
+  <% } else { %>
+      <title>Edit Admin &mdash; Enchanted Elegance</title>
+  <% } %>
   <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -54,16 +92,26 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Admin</span>
             </li>
+            <%-- If admin edit: other admin (Link active) or edit profile himself --%>
             <li class="sidebar-item">
+              <% if (isOwnReq) { %>
               <a class="sidebar-link" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-user"></i>
                 </span>
                 <span class="hide-menu">All Admins</span>
               </a>
+              <% } else { %>
+              <a class="sidebar-link active" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-user"></i>
+                </span>
+                <span class="hide-menu">All Admins</span>
+              </a>
+              <% } %>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link active" href="/enchanted_elegance/pages/admin/add-admin.jsp" aria-expanded="false">
+              <a class="sidebar-link" href="/enchanted_elegance/pages/admin/add-admin.jsp" aria-expanded="false">
                 <span>
                   <i class="ti ti-user-plus"></i>
                 </span>
@@ -173,11 +221,18 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                  <%-- active --%>
-                    <a href="/enchanted_elegance/admin/profile?id=<%= admin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
+                  <%-- If admin edit: other admin or edit profile himself (Link active) --%>
+                    <% if (isOwnReq) { %>
+                    <a href="/enchanted_elegance/admin/profile?id=<%= sessionAdmin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item active">
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
+                    <% } else { %>
+                    <a href="/enchanted_elegance/admin/profile?id=<%= sessionAdmin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">My Profile</p>
+                    </a>
+                    <% } %>
                     <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-mail fs-6"></i>
                       <p class="mb-0 fs-3">My Account</p>
@@ -195,107 +250,62 @@
         </nav>
       </header>
       <div class="container-fluid">
-          <!-- Row 1 -->
+        <!-- Row 1 -->
         <div class="row">
-          <div class="col-md-7 col-12">
-            <div class="card">
-              <div class="card-body p-3 p-md-4 p-lg-5">
-                <h3 class="mb-1 mb-md-2"><%= admin.getName() %></h3>
-                <h5 class="mb-3 mb-md-4"><span class="text-primary">Welcome!!</span></h5>                
-                <div class="w-100">
-                  <div class="row">
-                    <div class="col-12">                   
-                      <div class="mb-2 mb-md-3">
-                        <h6>Role : <span class="text-primary">Admin</span></h6>                
-                      </div>                      
-                    </div>                   
-                    <div class="col-12">                   
-                      <div class="mb-2">
-                        <label><i class="fa fa-address-book-o mx-2" aria-hidden="true"></i>Name : <span class="text-black"><%= admin.getName() %></span></label>
-                      </div>                      
-                    </div>
-                    <div class="col-12">                   
-                      <div class="mb-2">
-                        <label><i class="fa fa-volume-control-phone mx-2" aria-hidden="true"></i>Mobile : <span class="text-black"><%= admin.getMobile() %></span></label>
-                      </div>                      
-                    </div>
-                    <div class="col-12">                   
-                      <div class="mb-2">
-                        <label><i class="fa fa-envelope mx-2" aria-hidden="true"></i>Email : <span class="text-black"><%= admin.getEmail() %></span></label>
-                      </div>                      
-                    </div>
-                    <div class="col-12">                   
-                      <div class="mb-2">
-                        <label><i class="fa fa-key mx-2" aria-hidden="true"></i>Password : <span class="text-black"><%= admin.getPassword() %></span></label>
-                      </div>                      
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5 col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row alig n-items-start">
-                  <div class="col-8">
-                    <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                    <h4 class="fw-semibold mb-3">$6,820</h4>
-                    <div class="d-flex align-items-center pb-1">
-                      <span
-                        class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-arrow-down-right text-danger"></i>
-                      </span>
-                      <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                      <p class="fs-3 mb-0">last year</p>
-                    </div>
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex justify-content-end">
-                      <div
-                        class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-currency-dollar fs-6"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="earning"></div>
-            </div>
-          </div>
           <div class="col-12">
             <div class="card">
-              <div class="card-body p-3 p-md-4 p-lg-5">
-                <h3 class="h5 text-black mb-3"><i class="fa fa-cog mr-1 fa-spin"></i> Account Settings</h3>
-                <div class="row">
-                  <% if (session.getAttribute("admin") != null) { %>
-                    <div class="col-12 col-md-6 mb-3 mb-md-3">
-                      <a href="/enchanted_elegance/pages/admin/edit-admin-profile.jsp?id=<%= admin.getId() %>" 
-                        class="btn btn-warning px-3 px-md-4 py-2 text-white w-100">
-                        <i class="ti ti-pencil"></i> Edit Profile
-                      </a>                   
+              <div class="card-body p-4 p-md-5">
+                <% if (isOwnReq) { %>
+                    <h2 class="mb-3 mb-md-3">Edit My Profile</h2>
+                <% } else { %>
+                    <h2 class="mb-3 mb-md-3">Edit Admin</h2>
+                <% } %>
+                <form id="adminEditForm" class="w-100" action="/enchanted_elegance/admin/edit-admin" method="post">
+                <input type="hidden" name="id" value="<%= admin.getId() %>">
+                <div class="row g-3">                   
+                    <div class="col-12">                   
+                    <div class="form-floating">
+                        <input type="text" class="form-control form-control-lg" id="nameInput" placeholder="Name" name="name"  value="<%= admin.getName() %>">
+                        <label for="nameInput" class="required">Name</label>
+                        <div id="nameError" class="error-message"></div>
+                    </div>                      
                     </div>
-                  <% } %>
-                  
-                  <% if (session.getAttribute("admin") != null) { %>
-                    <div class="col-12 col-md-6 mb-3 mb-md-3">
-                      <form action="/enchanted_elegance/admin/delete-account" method="post" 
-                            onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-                        <input type="hidden" name="id" value="<%= admin.getId() %>">
-                        <button type="submit" class="btn btn-danger px-3 px-md-4 py-2 text-white w-100">
-                          <i class="ti ti-trash"></i> Delete Account
-                        </button>                       
-                      </form>
-                    </div>     
-                  <% } %>
-                  
-                  <div class="col-12 mb-2 mb-md-0">
-                    <a href="/enchanted_elegance/admin/logout" 
-                      class="btn btn-dark px-3 px-md-4 py-2 text-white w-100">
-                      <i class="fa fa-sign-out"></i> Logout
-                    </a>                   
-                  </div>
-                </div>         
+                    <div class="col-6">                   
+                    <div class="form-floating">
+                        <input type="text" class="form-control form-control-lg" id="mobileInput" placeholder="Mobile" name="mobile" value="<%= admin.getMobile() %>">
+                        <label for="mobileInput" class="required">Mobile</label>
+                        <div id="mobileError" class="error-message"></div>
+                    </div>                     
+                    </div>
+                    <div class="col-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control form-control-lg" id="emailInput" placeholder="Email Address" name="email" value="<%= admin.getEmail() %>" >
+                        <label for="emailInput" class="required">Email Address</label>
+                        <div id="emailError" class="error-message"></div>
+                    </div>
+                    </div>
+                    <div class="col-6">
+                    <div class="form-floating">
+                        <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Blank: Keep current" name="password" >
+                        <label for="passwordInput">Password</label>
+                        <div id="passwordError" class="error-message"></div>                        
+                        <div class="text-primary">Blank: Want Keep current</div>
+                    </div>
+                    </div>
+                    <div class="col-6">
+                    <div class="form-floating">
+                        <input type="password" class="form-control form-control-lg" id="confirmPasswordInput" placeholder="Password">
+                        <label for="confirmPasswordInput">Confirm Password</label>
+                        <div id="confirmPasswordError" class="error-message"></div>
+                    </div>
+                    </div>
+                    <div class="mt-3">
+                    <button type="submit" class="btn btn-primary py-2 rounded-2">
+                        Save 
+                    </button>
+                    </div>
+                </div>
+                </form>
               </div>
             </div>
           </div>
@@ -311,6 +321,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/admin-edit-form.js"></script>
 </body>
 
 </html>

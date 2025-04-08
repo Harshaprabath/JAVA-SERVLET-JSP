@@ -41,9 +41,9 @@ public class EditAdminProfileServlet extends HttpServlet {
             }
             if (adminDAO.updateAdmin(admin)) {
                 session.setAttribute("admin", admin);  // Update session
-                resp.sendRedirect("profile?id=" + admin.getId());
+                resp.sendRedirect("profile?id=" + admin.getId()+"&success=Profile+update+successful");
             } else {
-                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?error=Failed to update profile");
+                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?id=" + admin.getId() +"&error=Failed to update profile");
             }
 
         } else { // check : admin update done by another admin
@@ -58,7 +58,7 @@ public class EditAdminProfileServlet extends HttpServlet {
             if (adminDAO.updateAdmin(admin)) {
                 resp.sendRedirect("admin-list?success=Update+successful" );
             } else {
-                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?error=Failed to update profile");
+                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?id=" + id +"&error=Failed to update admin");
             }
 
         }
