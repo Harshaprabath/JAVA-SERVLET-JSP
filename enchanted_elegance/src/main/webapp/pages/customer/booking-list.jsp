@@ -10,8 +10,24 @@
         return;
     }
 
+    List<Booking> allBookings = (List<Booking>) request.getAttribute("bookings");
+    int currentPage = 1;
+    int recordsPerPage = 5; // Changed to 5 rows per page
+    
+    // Get current page from request parameter
+    if(request.getParameter("page") != null) {
+        currentPage = Integer.parseInt(request.getParameter("page"));
+    }
+    
+    // Calculate pagination values
+    int totalRecords = allBookings != null ? allBookings.size() : 0;
+    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+    int start = (currentPage - 1) * recordsPerPage;
+    int end = Math.min(start + recordsPerPage, totalRecords);
+    
+    // Get sublist for current page
+    List<Booking> bookings = allBookings != null ? allBookings.subList(start, end) : null;
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -123,53 +139,79 @@
           <div class="col-md-12 mt-2 mb-2">
             <h2 class="mb-4 site-section-heading">All Bookings</h2>
             <div class="bl-table-container">
-              <table class="bl-table">
-                  <thead class="bl-thead">
-                      <tr>
-                          <th class="bl-th">Name</th>
-                          <th class="bl-th">Mobile</th>
-                          <th class="bl-th">Email</th>
-                          <th class="bl-th">Treatment</th>
-                          <th class="bl-th">Booking Date</th>
-                          <th class="bl-th">Note</th>
-                          <th class="bl-th">Action</th>
-                      </tr>
-                  </thead>
-                  <tbody class="bl-tbody">
-                    <%
-                        List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
-                        if (bookings != null && !bookings.isEmpty()) {
-                            for (Booking booking : bookings) {
-                    %>        
-                      <tr>
-                          <td class="bl-td"><%= booking.getName() %></td>
-                          <td class="bl-td"><%= booking.getMobile() %></td>
-                          <td class="bl-td"><%= booking.getEmail() %></td>
-                          <td class="bl-td"><%= booking.getTreatment() %></td>
-                          <td class="bl-td"><%= booking.getDate() %></td>
-                          <td class="bl-td"><%= booking.getNote() %></td>
-                          <td class="bl-td-action">
-                              <a href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></a>
-                              
-                              <form action="delete-booking" method="post" style="display:inline;">               
-                                 <input type="hidden" name="id" value="<%= booking.getId() %>">
-                                 <input type="hidden" name="from" value="user">
-                                 <button type="submit" onclick="return confirm('Are you sure?')" class="bl-btn bl-delete"><i class="fa fa-trash"></i></button>
-                              </form>
-
-                          </td>                 
-                      </tr>
-                      <%
-                              }
-                          } else {
-                      %>
-                      <tr>
-                        <td class="bl-td" colspan="9">No bookings found.</td>
-                      </tr>
-                    <% } %>
-                  </tbody>
-              </table>
-          </div>
+                <table class="bl-table">
+                    <thead class="bl-thead">
+                        <tr>
+                            <th class="bl-th">Name</th>
+                            <th class="bl-th">Mobile</th>
+                            <th class="bl-th">Email</th>
+                            <th class="bl-th">Treatment</th>
+                            <th class="bl-th">Booking Date</th>
+                            <th class="bl-th">Note</th>
+                            <th class="bl-th">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bl-tbody">
+                        <%
+                            if (bookings != null && !bookings.isEmpty()) {
+                                for (Booking booking : bookings) {
+                        %>        
+                        <tr>
+                            <td class="bl-td"><%= booking.getName() %></td>
+                            <td class="bl-td"><%= booking.getMobile() %></td>
+                            <td class="bl-td"><%= booking.getEmail() %></td>
+                            <td class="bl-td"><%= booking.getTreatment() %></td>
+                            <td class="bl-td"><%= booking.getDate() %></td>
+                            <td class="bl-td"><%= booking.getNote() %></td>
+                            <td class="bl-td-action">
+                                <a href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></a>
+                                
+                                <form action="delete-booking" method="post" style="display:inline;">               
+                                  <input type="hidden" name="id" value="<%= booking.getId() %>">
+                                  <input type="hidden" name="from" value="user">
+                                  <button type="submit" onclick="return confirm('Are you sure?')" class="bl-btn bl-delete"><i class="fa fa-trash"></i></button>
+                                </form>
+                            </td>                 
+                        </tr>
+                        <%
+                                }
+                            } else {
+                        %>
+                        <tr>
+                          <td class="bl-td" colspan="7">No bookings found.</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                
+                <%-- Pagination --%>
+                <% if (totalPages > 1) { %>
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <%-- Previous button --%>
+                        <li class="page-item <%= currentPage == 1 ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        
+                        <%-- Page numbers --%>
+                        <% for (int i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i == currentPage ? "active" : "" %>">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                        
+                        <%-- Next button --%>
+                        <li class="page-item <%= currentPage == totalPages ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <% } %>
+            </div>          
           </div>
         </div>
       </div>

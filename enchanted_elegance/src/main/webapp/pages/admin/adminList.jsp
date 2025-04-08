@@ -3,10 +3,28 @@
 <%@ page import="java.util.List" %>
 <%
     Admin adminSession = (Admin) session.getAttribute("admin");
-      if (adminSession == null) {
-            response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first"); // Redirect to the login page if not logged in
-            return;
-        }
+    if (adminSession == null) {
+        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
+        return;
+    }
+
+    List<Admin> allAdmins = (List<Admin>) request.getAttribute("admins");
+    int currentPage = 1;
+    int recordsPerPage = 10;
+    
+    // Get current page from request parameter
+    if(request.getParameter("page") != null) {
+        currentPage = Integer.parseInt(request.getParameter("page"));
+    }
+    
+    // Calculate pagination values
+    int totalRecords = allAdmins != null ? allAdmins.size() : 0;
+    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+    int start = (currentPage - 1) * recordsPerPage;
+    int end = Math.min(start + recordsPerPage, totalRecords);
+    
+    // Get sublist for current page
+    List<Admin> admins = allAdmins != null ? allAdmins.subList(start, end) : null;
 %>
 
 <!doctype html>
@@ -210,62 +228,89 @@
                                   </h5>
                               </div>
                           </div>
-                          <div class="table-responsive">
-                              <div class="ad-taade-container">
-                                  <table class="ad-taade table table-hover mb-0">
-                                      <thead class="ad-thead">
-                                          <tr>
-                                              <th class="ad-th text-nowrap">ID</th>
-                                              <th class="ad-th text-nowrap">Name</th>
-                                              <th class="ad-th text-nowrap">Mobile</th>
-                                              <th class="ad-th text-nowrap">Email</th>
-                                              <th class="ad-th text-nowrap">Password</th>
-                                              <th class="ad-th text-center text-nowrap">Action</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <%
-                                              List<Admin> admins = (List<Admin>) request.getAttribute("admins");
-                                              if (admins != null && !admins.isEmpty()) {
-                                                  for (Admin admin : admins) {
-                                          %>
-                                          <tr class="align-middle">
-                                              <td class="ad-td fs-sm"><%= admin.getId() %></td>
-                                              <td class="ad-td fs-sm text-nowrap"><%= admin.getName() %></td>
-                                              <td class="ad-td fs-sm"><%= admin.getMobile() %></td>
-                                              <td class="ad-td fs-sm"><%= admin.getEmail() %></td>
-                                              <td class="ad-td fs-sm text-truncate" style="max-width: 150px;"><%= admin.getPassword() %></td>
-                                              <td class="ad-td-action">
-                                                  <div class="d-flex justify-content-center gap-2">
-                                                      <a href="../pages/admin/edit-admin-profile.jsp?id=<%= admin.getId() %>" 
-                                                        class="ad-btn ad-edit text-decoration-none d-flex align-items-center justify-content-center"
-                                                        style="width: 30px; height: 30px;">
-                                                          <i class="ti ti-pencil fs-xs"></i>
-                                                      </a>
-                                                      <form action="../admin/delete-account" method="post" class="d-inline m-0">
-                                                          <input type="hidden" name="id" value="<%= admin.getId() %>">
-                                                          <button type="submit" 
-                                                                  class="ad-btn ad-delete d-flex align-items-center justify-content-center"
-                                                                  style="width: 30px; height: 30px;"
-                                                                  onclick="return confirm('Are you sure?')">
-                                                              <i class="ti ti-trash fs-xs"></i>
-                                                          </button>
-                                                      </form>
-                                                  </div>
-                                              </td>
-                                          </tr>
-                                          <%
-                                                  }
-                                              } else {
-                                          %>
-                                          <tr>
-                                              <td colspan="6" class="text-center py-4 fs-sm">No admins found.</td>
-                                          </tr>
-                                          <% } %>
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </div>
+                        <div class="table-responsive">
+                            <div class="ad-taade-container">
+                                <table class="ad-taade table table-hover mb-0">
+                                    <thead class="ad-thead">
+                                        <tr>
+                                            <th class="ad-th text-nowrap">ID</th>
+                                            <th class="ad-th text-nowrap">Name</th>
+                                            <th class="ad-th text-nowrap">Mobile</th>
+                                            <th class="ad-th text-nowrap">Email</th>
+                                            <th class="ad-th text-nowrap">Password</th>
+                                            <th class="ad-th text-center text-nowrap">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            if (admins != null && !admins.isEmpty()) {
+                                                for (Admin admin : admins) {
+                                        %>
+                                        <tr class="align-middle">
+                                            <td class="ad-td fs-sm"><%= admin.getId() %></td>
+                                            <td class="ad-td fs-sm text-nowrap"><%= admin.getName() %></td>
+                                            <td class="ad-td fs-sm"><%= admin.getMobile() %></td>
+                                            <td class="ad-td fs-sm"><%= admin.getEmail() %></td>
+                                            <td class="ad-td fs-sm text-truncate" style="max-width: 150px;"><%= admin.getPassword() %></td>
+                                            <td class="ad-td-action">
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <a href="../pages/admin/edit-admin-profile.jsp?id=<%= admin.getId() %>" 
+                                                      class="ad-btn ad-edit text-decoration-none d-flex align-items-center justify-content-center"
+                                                      style="width: 30px; height: 30px;">
+                                                        <i class="ti ti-pencil fs-xs"></i>
+                                                    </a>
+                                                    <form action="../admin/delete-account" method="post" class="d-inline m-0">
+                                                        <input type="hidden" name="id" value="<%= admin.getId() %>">
+                                                        <button type="submit" 
+                                                                class="ad-btn ad-delete d-flex align-items-center justify-content-center"
+                                                                style="width: 30px; height: 30px;"
+                                                                onclick="return confirm('Are you sure?')">
+                                                            <i class="ti ti-trash fs-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <%
+                                                }
+                                            } else {
+                                        %>
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 fs-sm">No admins found.</td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <%-- Pagination --%>
+                            <% if (totalPages > 1) { %>
+                            <nav aria-label="Page navigation" class="mt-3">
+                                <ul class="pagination justify-content-center">
+                                    <%-- Previous button --%>
+                                    <li class="page-item <%= currentPage == 1 ? "disabled" : "" %>">
+                                        <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <%-- Page numbers --%>
+                                    <% for (int i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i == currentPage ? "active" : "" %>">
+                                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <%-- Next button --%>
+                                    <li class="page-item <%= currentPage == totalPages ? "disabled" : "" %>">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <% } %>
+                        </div>
                       </div>
                   </div>
               </div>
