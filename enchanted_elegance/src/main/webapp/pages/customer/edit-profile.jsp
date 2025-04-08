@@ -159,13 +159,13 @@
                  </div>
                  <div class="row form-group">
                      <div class="col-md-6">
-                         <label class="text-black required" for="password">Password</label>
+                         <label class="text-black" for="password">Password</label>
                          <input type="password" id="password" name="password" class="form-control" 
-                                placeholder="Password" required>
+                                placeholder="Blank: Keep current" required>
                          <small class="error-message" id="passwordError"></small>
                      </div>
                      <div class="col-md-6">
-                         <label class="text-black required" for="confirmPassword">Confirm Password</label>
+                         <label class="text-black" for="confirmPassword">Confirm Password</label>
                          <input type="password" id="confirmPassword" class="form-control" 
                                 placeholder="Confirm Password" required>
                          <small class="error-message" id="confirmPasswordError"></small>

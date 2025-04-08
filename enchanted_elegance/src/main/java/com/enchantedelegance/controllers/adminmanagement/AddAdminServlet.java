@@ -47,10 +47,10 @@ public class AddAdminServlet extends HttpServlet {
 
         if (isAdded) {
             // Redirect to admin list page after successful registration
-            resp.sendRedirect("admin-list?success=Registration+successful");
+            resp.sendRedirect("admin-list?success=New+admin+added+successful");
         } else {
             // Stay on admin page if an error occurs
-            resp.sendRedirect("../pages/admin/add-admin.jsp?error=Registration+failed,+try+again");
+            resp.sendRedirect("../pages/admin/add-admin.jsp?error=New+admin+registration+failed,+try+again");
         }
     }
 }

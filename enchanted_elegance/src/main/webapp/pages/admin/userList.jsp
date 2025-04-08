@@ -40,6 +40,7 @@
                  <a href="pages/admin/edit-user-adminaccess.jsp?id=<%= user.getId() %>">Edit</a>
                  <form action="delete-account" method="post" style="display:inline;">
                      <input type="hidden" name="id" value="<%= user.getId() %>">
+                     <input type="hidden" name="from" value="admin">
                      <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                  </form>
 

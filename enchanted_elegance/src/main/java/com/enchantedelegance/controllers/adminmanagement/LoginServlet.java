@@ -15,13 +15,13 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     private final AdminDAO adminDAO = new AdminDAO();
 
-    //If no admins exist, a default admin (admin@example.com / admin123) is created
-    public LoginServlet() { adminDAO.defaultAdmin();}
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+
+        //If no admins exist, a default admin (admin@example.com / admin123) is created
+        adminDAO.defaultAdmin();
 
         // Validate input
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {

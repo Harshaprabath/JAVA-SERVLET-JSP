@@ -1,8 +1,8 @@
-
 package com.enchantedelegance.controllers.usermanagement;
 
 import com.enchantedelegance.dao.usermanagement.UserDAO;
 import com.enchantedelegance.models.usermanagement.User;
+import com.enchantedelegance.models.adminmanagement.Admin;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,10 +18,16 @@ public class DeleteAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+
+        //from where request come admin or user
         User sessionUser = (User) session.getAttribute("user");
+        Admin sessionAdmin = (Admin) session.getAttribute("admin");
+
 
         // Check if user ID is provided in the request parameter
         String userIdParam = req.getParameter("id");
+        String fromParam = req.getParameter("from"); //admin or user
+
         int userId = -1;
 
         if (userIdParam != null && !userIdParam.isEmpty()) {
@@ -43,14 +49,16 @@ public class DeleteAccountServlet extends HttpServlet {
         // Perform deletion
         if (userDAO.deleteUserById(userId)) {
             // Invalidate session only if the session user deleted their own account
-            if (sessionUser != null && sessionUser.getId() == userId) {
-                session.invalidate();
+            if (sessionUser != null && fromParam.equalsIgnoreCase("user")) {
+                session.removeAttribute("user");  // Only removes the user, admin stays
                 resp.sendRedirect("pages/customer/index.jsp?message=Account deleted successfully");
-            } else {
+            } else if(sessionAdmin != null && fromParam.equalsIgnoreCase("admin")) {
+                session.removeAttribute("user");  // Only removes the user, admin stays
                 resp.sendRedirect("user-list?message=User deleted successfully");
             }
         } else {
             resp.sendRedirect("profile?error=Failed to delete account");
         }
+
     }
 }
