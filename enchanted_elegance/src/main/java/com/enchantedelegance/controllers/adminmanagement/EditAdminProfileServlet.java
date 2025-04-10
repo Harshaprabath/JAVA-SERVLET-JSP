@@ -30,6 +30,15 @@ public class EditAdminProfileServlet extends HttpServlet {
 
         Admin admin = adminDAO.getAdminById(id);
 
+        //for navigate list current page
+        String pageParam = req.getParameter("page");
+        int pageNo =1;
+        if(pageParam != null && !pageParam.isEmpty() ){
+
+            pageNo =Integer.parseInt(pageParam);
+
+        }
+
         if (sessionAdminId == id) { // check : admin update done by himself
             if (admin != null) {
                 admin.setName(name);
@@ -56,9 +65,9 @@ public class EditAdminProfileServlet extends HttpServlet {
                 }
             }
             if (adminDAO.updateAdmin(admin)) {
-                resp.sendRedirect("admin-list?success=Update+successful" );
+                resp.sendRedirect("admin-list?success=Update+successful&page="+pageNo );
             } else {
-                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?id=" + id +"&error=Failed to update admin");
+                resp.sendRedirect("pages/admin/edit-admin-profile.jsp?id=" + id +"&error=Failed to update admin&page="+pageNo);
             }
 
         }

@@ -12,7 +12,7 @@
 
     List<Booking> allBookings = (List<Booking>) request.getAttribute("bookings");
     int currentPage = 1;
-    int recordsPerPage = 5; // Changed to 5 rows per page
+    int recordsPerPage = 5; 
     
     // Get current page from request parameter
     if(request.getParameter("page") != null) {
@@ -22,6 +22,19 @@
     // Calculate pagination values
     int totalRecords = allBookings != null ? allBookings.size() : 0;
     int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+    
+    // If current page is greater than total pages and not page 1, redirect to previous page
+    if (currentPage > totalPages && totalPages > 0) {
+        response.sendRedirect("?page=" + (currentPage - 1));
+        return;
+    }
+    
+    // If no records and not on page 1, redirect to page 1
+    if (totalRecords == 0 && currentPage != 1) {
+        response.sendRedirect("?page=1");
+        return;
+    }
+    
     int start = (currentPage - 1) * recordsPerPage;
     int end = Math.min(start + recordsPerPage, totalRecords);
     
@@ -164,11 +177,12 @@
                             <td class="bl-td"><%= booking.getDate() %></td>
                             <td class="bl-td"><%= booking.getNote() %></td>
                             <td class="bl-td-action">
-                                <a href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></a>
+                                <a href="pages/customer/edit-booking.jsp?id=<%= booking.getId() %>&page=<%= currentPage %>" class="bl-btn bl-edit"><i class="fa fa-pencil"></i></a>
                                 
                                 <form action="delete-booking" method="post" style="display:inline;">               
                                   <input type="hidden" name="id" value="<%= booking.getId() %>">
                                   <input type="hidden" name="from" value="user">
+                                  <input type="hidden" name="page" value="<%= currentPage %>">
                                   <button type="submit" onclick="return confirm('Are you sure?')" class="bl-btn bl-delete"><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>                 

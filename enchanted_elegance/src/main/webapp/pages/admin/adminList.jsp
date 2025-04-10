@@ -10,7 +10,7 @@
 
     List<Admin> allAdmins = (List<Admin>) request.getAttribute("admins");
     int currentPage = 1;
-    int recordsPerPage = 10;
+    int recordsPerPage = 5;
     
     // Get current page from request parameter
     if(request.getParameter("page") != null) {
@@ -20,6 +20,19 @@
     // Calculate pagination values
     int totalRecords = allAdmins != null ? allAdmins.size() : 0;
     int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+
+    // If current page is greater than total pages and not page 1, redirect to previous page
+    if (currentPage > totalPages && totalPages > 0) {
+        response.sendRedirect("?page=" + (currentPage - 1));
+        return;
+    }
+    
+    // If no records and not on page 1, redirect to page 1
+    if (totalRecords == 0 && currentPage != 1) {
+        response.sendRedirect("?page=1");
+        return;
+    }
+
     int start = (currentPage - 1) * recordsPerPage;
     int end = Math.min(start + recordsPerPage, totalRecords);
     
@@ -221,7 +234,7 @@
                           <div class="d-sm-flex d-block align-items-center justify-content-between mb-3 mb-lg-4">
                               <div class="mb-2 mb-sm-0">
                                   <h5 class="card-title fw-semibold mb-0">Admin List 
-                                      <a href="/enchanted_elegance/pages/admin/add-admin.jsp" 
+                                      <a href="/enchanted_elegance/pages/admin/add-admin.jsp?page=<%= currentPage %>" 
                                         class="btn btn-outline-primary rounded-circle p-1 px-2 mx-2 ms-lg-3">
                                           <i class="ti ti-plus fs-6"></i>
                                       </a>
@@ -251,16 +264,17 @@
                                             <td class="ad-td fs-sm text-nowrap"><%= admin.getName() %></td>
                                             <td class="ad-td fs-sm"><%= admin.getMobile() %></td>
                                             <td class="ad-td fs-sm"><%= admin.getEmail() %></td>
-                                            <td class="ad-td fs-sm text-truncate" style="max-width: 150px;"><%= admin.getPassword() %></td>
+                                            <td class="ad-td fs-sm text-truncate" ><%= admin.getPassword() %></td>
                                             <td class="ad-td-action">
                                                 <div class="d-flex justify-content-center gap-2">
-                                                    <a href="../pages/admin/edit-admin-profile.jsp?id=<%= admin.getId() %>" 
+                                                    <a href="../pages/admin/edit-admin-profile.jsp?id=<%= admin.getId() %>&page=<%= currentPage %>" 
                                                       class="ad-btn ad-edit text-decoration-none d-flex align-items-center justify-content-center"
                                                       style="width: 30px; height: 30px;">
                                                         <i class="ti ti-pencil fs-xs"></i>
                                                     </a>
                                                     <form action="../admin/delete-account" method="post" class="d-inline m-0">
                                                         <input type="hidden" name="id" value="<%= admin.getId() %>">
+                                                        <input type="hidden" name="page" value="<%= currentPage %>">
                                                         <button type="submit" 
                                                                 class="ad-btn ad-delete d-flex align-items-center justify-content-center"
                                                                 style="width: 30px; height: 30px;"

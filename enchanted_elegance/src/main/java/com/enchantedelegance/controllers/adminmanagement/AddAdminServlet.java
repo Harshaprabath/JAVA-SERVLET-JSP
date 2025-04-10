@@ -22,19 +22,26 @@ public class AddAdminServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
+        int pageNo=1;
+        String pageParam = req.getParameter("page"); //page number
+
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+
         // Validate input fields (basic validation)
         if (name == null || name.trim().isEmpty() ||
                 mobile == null || mobile.trim().isEmpty() ||
                 email == null || email.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
 
-            resp.sendRedirect("../pages/admin/add-admin.jsp?error=All+fields+are+required");
+            resp.sendRedirect("../pages/admin/add-admin.jsp?error=All+fields+are+required&page="+pageNo);
             return;
         }
 
         // Check if email is already registered
         if (adminDAO.getAdminByEmail(email) != null) {
-            resp.sendRedirect("../pages/admin/add-admin.jsp?error=Email+already+exists");
+            resp.sendRedirect("../pages/admin/add-admin.jsp?error=Email+already+exists&page="+pageNo);
             return;
         }
 
@@ -47,10 +54,10 @@ public class AddAdminServlet extends HttpServlet {
 
         if (isAdded) {
             // Redirect to admin list page after successful registration
-            resp.sendRedirect("admin-list?success=New+admin+added+successful");
+            resp.sendRedirect("admin-list?success=New+admin+added+successful&page="+pageNo);
         } else {
             // Stay on admin page if an error occurs
-            resp.sendRedirect("../pages/admin/add-admin.jsp?error=New+admin+registration+failed,+try+again");
+            resp.sendRedirect("../pages/admin/add-admin.jsp?error=New+admin+registration+failed,+try+again&page="+pageNo);
         }
     }
 }

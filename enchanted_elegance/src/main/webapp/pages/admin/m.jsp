@@ -1,47 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
-<%@ page import="com.enchantedelegance.dao.adminmanagement.AdminDAO" %>
+<%@ page import="com.enchantedelegance.models.usermanagement.User" %>
+<%@ page import="com.enchantedelegance.dao.usermanagement.UserDAO" %>
 <%
-    Admin sessionAdmin = (Admin) session.getAttribute("admin");
-    
-    Admin admin=null;
+    Admin admin = (Admin) session.getAttribute("admin");
 
-    if (sessionAdmin == null) {
+    UserDAO userDAO = new UserDAO();
+
+    User user =null;
+    
+    if (admin == null) {
         response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
         return;
     }
     
-    boolean isOwnReq = false;
-    AdminDAO adminDAO = new AdminDAO(); // Initialize adminDAO
-    
-    // Get admin ID from URL
-    String adminIdParam = request.getParameter("id");
+    // Get user ID from URL
+    String userIdParam = request.getParameter("id");
    
-    if (adminIdParam != null && !adminIdParam.isEmpty()) {
-        int adminId = Integer.parseInt(adminIdParam);
-        admin = adminDAO.getAdminById(adminId); // Fetch admin from DB
+    int pageNo = 1;
+    // Get page no from URL
+    String pageParam = request.getParameter("page");
+    if(pageParam != null && !pageParam.isEmpty()){
+      pageNo = Integer.parseInt(pageParam);
     }
-    if(admin == null){
-        response.sendRedirect("/enchanted_elegance/admin/admin-list?error=Admin not found");
+
+    if (userIdParam != null && !userIdParam.isEmpty()) {
+        int userId = Integer.parseInt(userIdParam);
+        user = userDAO.getUserById(userId); // Fetch user from DB
+    }
+
+    if(user == null){
+        response.sendRedirect("/enchanted_elegance/user-list?error=User not found");
         return;
     }
-    // Compare IDs properly
-    if (admin != null && adminIdParam != null && !adminIdParam.isEmpty()) {
-        try {
-            int paramId = Integer.parseInt(adminIdParam);
-            isOwnReq = (paramId == sessionAdmin.getId());
-        } catch (NumberFormatException e) {
-            // Handle invalid number format
-            isOwnReq = false;
-        }
-    }
-     
-    // If no admin from URL, use session admin
-    if (admin == null) {
-        admin = (Admin) session.getAttribute("admin");
-    }
-    
-    
+          
 %>
 <!doctype html>
 <html lang="en">
@@ -49,11 +41,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <% if (isOwnReq) { %>
-      <title>Edit Profile &mdash; Enchanted Elegance</title>
-  <% } else { %>
-      <title>Edit Admin &mdash; Enchanted Elegance</title>
-  <% } %>
+  <title>Edit User &mdash; Enchanted Elegance</title>
   <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
 </head>
 
@@ -94,21 +82,12 @@
             </li>
             <%-- If admin edit: other admin (Link active) or edit profile himself --%>
             <li class="sidebar-item">
-              <% if (isOwnReq) { %>
               <a class="sidebar-link" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-user"></i>
                 </span>
                 <span class="hide-menu">All Admins</span>
               </a>
-              <% } else { %>
-              <a class="sidebar-link active" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user"></i>
-                </span>
-                <span class="hide-menu">All Admins</span>
-              </a>
-              <% } %>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link" href="/enchanted_elegance/pages/admin/add-admin.jsp" aria-expanded="false">
@@ -123,7 +102,7 @@
               <span class="hide-menu">Customer</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/enchanted_elegance/user-list" aria-expanded="false">
+              <a class="sidebar-link active" href="/enchanted_elegance/user-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-user"></i>
                 </span>
@@ -222,17 +201,10 @@
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
                   <%-- If admin edit: other admin or edit profile himself (Link active) --%>
-                    <% if (isOwnReq) { %>
-                    <a href="/enchanted_elegance/admin/profile?id=<%= sessionAdmin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item active">
+                   <a href="/enchanted_elegance/admin/profile?id=<%= admin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
-                    <% } else { %>
-                    <a href="/enchanted_elegance/admin/profile?id=<%= sessionAdmin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
-                    </a>
-                    <% } %>
                     <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-mail fs-6"></i>
                       <p class="mb-0 fs-3">My Account</p>
@@ -255,31 +227,28 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body p-4 p-md-5">
-                <% if (isOwnReq) { %>
-                    <h2 class="mb-3 mb-md-3">Edit My Profile</h2>
-                <% } else { %>
-                    <h2 class="mb-3 mb-md-3">Edit Admin</h2>
-                <% } %>
-                <form id="adminEditForm" class="w-100" action="/enchanted_elegance/admin/edit-admin" method="post">
-                <input type="hidden" name="id" value="<%= admin.getId() %>">
+                <h2 class="mb-3 mb-md-3">Edit User</h2>
+                <form id="userEditForm" class="w-100" action="/enchanted_elegance/edit-user" method="post">
+                <input type="hidden" name="id" value="<%= user.getId() %>">
+                <input type="hidden" name="page" value="<%= pageNo %>">
                 <div class="row g-3">                   
                     <div class="col-12">                   
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="nameInput" placeholder="Name" name="name"  value="<%= admin.getName() %>">
+                        <input type="text" class="form-control form-control-lg" id="nameInput" placeholder="Name" name="name"  value="<%= user.getName() %>">
                         <label for="nameInput" class="required">Name</label>
                         <div id="nameError" class="error-message"></div>
                     </div>                      
                     </div>
                     <div class="col-6">                   
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="mobileInput" placeholder="Mobile" name="mobile" value="<%= admin.getMobile() %>">
+                        <input type="text" class="form-control form-control-lg" id="mobileInput" placeholder="Mobile" name="mobile" value="<%= user.getMobile() %>">
                         <label for="mobileInput" class="required">Mobile</label>
                         <div id="mobileError" class="error-message"></div>
                     </div>                     
                     </div>
                     <div class="col-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="emailInput" placeholder="Email Address" name="email" value="<%= admin.getEmail() %>" >
+                        <input type="text" class="form-control form-control-lg" id="emailInput" placeholder="Email Address" name="email" value="<%= user.getEmail() %>" >
                         <label for="emailInput" class="required">Email Address</label>
                         <div id="emailError" class="error-message"></div>
                     </div>
@@ -301,7 +270,7 @@
                     </div>
                     <div class="mt-3">
                     <button type="submit" class="btn btn-primary py-2 rounded-2">
-                        Save 
+                        Save Changes 
                     </button>
                     </div>
                 </div>
@@ -321,7 +290,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
-  <script src="/enchanted_elegance/pages/admin/js/admin-edit-form.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/user-edit-form.js"></script>
 </body>
 
 </html>

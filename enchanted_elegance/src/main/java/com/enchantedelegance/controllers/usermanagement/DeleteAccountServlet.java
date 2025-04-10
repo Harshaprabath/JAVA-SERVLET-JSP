@@ -28,6 +28,15 @@ public class DeleteAccountServlet extends HttpServlet {
         String userIdParam = req.getParameter("id");
         String fromParam = req.getParameter("from"); //admin or user
 
+        //for navigate list current page
+        String pageParam = req.getParameter("page");
+        int pageNo =1;
+        if(pageParam != null && !pageParam.isEmpty() ){
+
+            pageNo =Integer.parseInt(pageParam);
+
+        }
+
         int userId = -1;
 
         if (userIdParam != null && !userIdParam.isEmpty()) {
@@ -54,7 +63,7 @@ public class DeleteAccountServlet extends HttpServlet {
                 resp.sendRedirect("pages/customer/index.jsp?message=Account deleted successfully");
             } else if(sessionAdmin != null && fromParam.equalsIgnoreCase("admin")) {
                 session.removeAttribute("user");  // Only removes the user, admin stays
-                resp.sendRedirect("user-list?message=User deleted successfully");
+                resp.sendRedirect("user-list?message=User deleted successfully&page="+pageNo);
             }
         } else {
             resp.sendRedirect("profile?error=Failed to delete account");

@@ -24,7 +24,7 @@ public class GetAllBookingsByUserIdServlet extends HttpServlet {
         User sessionUser = (User) session.getAttribute("user");
 
         if (sessionUser == null) {
-            resp.sendRedirect("pages/customer/login.jsp");
+            resp.sendRedirect("pages/customer/login.jsp?error=Please login first");
             return;
         }
 
