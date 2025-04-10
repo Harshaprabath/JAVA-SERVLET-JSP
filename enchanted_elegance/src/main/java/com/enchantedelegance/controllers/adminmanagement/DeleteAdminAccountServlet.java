@@ -21,8 +21,18 @@ public class DeleteAdminAccountServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Admin sessionAdmin = (Admin) session.getAttribute("admin");
 
+        //for navigate list current page
+        String pageParam = req.getParameter("page");
+        int pageNo =1;
+        if(pageParam != null && !pageParam.isEmpty() ){
+
+            pageNo =Integer.parseInt(pageParam);
+
+        }
+
         // Check if admin ID is provided in the request parameter
         String adminIdParam = req.getParameter("id");
+
         int adminId = -1;
 
         if (adminIdParam != null && !adminIdParam.isEmpty()) {
@@ -37,7 +47,7 @@ public class DeleteAdminAccountServlet extends HttpServlet {
         }
 
         if (adminId == -1) {
-            resp.sendRedirect("../admin/admin-list?error=Admin ID not found");
+            resp.sendRedirect("../admin/admin-list?error=Admin ID not found&page="+pageNo);
             return;
         }
 
@@ -48,7 +58,7 @@ public class DeleteAdminAccountServlet extends HttpServlet {
                 session.removeAttribute("admin");
                 resp.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?message=Account deleted successfully");
             } else {
-                resp.sendRedirect("../admin/admin-list?message=Admin deleted successfully");
+                resp.sendRedirect("../admin/admin-list?message=Admin deleted successfully&page="+pageNo);
             }
         } else {
             resp.sendRedirect("../admin/profile?error=Failed to delete account");

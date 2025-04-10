@@ -12,6 +12,8 @@
     }
     // Get Booking ID from URL
     String bookingIdParam = request.getParameter("id");
+    // Get page no from URL
+    String pageParam = request.getParameter("page");
 
     Booking booking = new Booking();
     BookingDAO bookingDAO = new BookingDAO();
@@ -133,7 +135,8 @@
               <h2 class="mb-4 site-section-heading">Change Booking</h2>
               
               <input type="hidden"name="id" value="<%= booking.getId() %>">
-              
+              <input type="hidden" name="page" value="<%= pageParam %>">
+
               <div class="row form-group">
                 <div class="col-md-6 mb-3 mb-md-0">
                   <label class="text-black required" for="name">Name</label>
@@ -184,7 +187,7 @@
 
               <div class="row form-group">
                 <div class="col-md-12">
-                  <input type="submit" value="Book Appointment" class="btn btn-primary py-2 px-4 text-white">
+                  <input type="submit" value="Change Appointment" class="btn btn-primary py-2 px-4 text-white">
                 </div>
               </div>
             </form>

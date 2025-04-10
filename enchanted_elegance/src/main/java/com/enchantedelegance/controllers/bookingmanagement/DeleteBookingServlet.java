@@ -30,20 +30,26 @@ public class DeleteBookingServlet extends HttpServlet {
         // Check if booking ID is provided in the request parameter
         String bookingIdParam = req.getParameter("id");
         String fromParam = req.getParameter("from"); //admin or user
+        String pageParam = req.getParameter("page"); //page number
 
         int bookingId = -1;
+        int pageNo=1;
+
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
 
         if (bookingIdParam != null && !bookingIdParam.isEmpty()) {
             try {
                 bookingId = Integer.parseInt(bookingIdParam); // Use the ID from URL
             } catch (NumberFormatException e) {
-                resp.sendRedirect("booking-list?error=Invalid booking ID");
+                resp.sendRedirect("booking-list?error=Invalid booking ID&page="+pageNo);
                 return;
             }
         }
 
         if (bookingId == -1) {
-            resp.sendRedirect("booking-list?error=Booking ID not found");
+            resp.sendRedirect("booking-list?error=Booking ID not found&page="+pageNo);
             return;
         }
 
@@ -51,12 +57,12 @@ public class DeleteBookingServlet extends HttpServlet {
         if (bookingDAO.deleteBookingById(bookingId)) {
             // Invalidate session only if the session user deleted their own account
             if (sessionUser != null && fromParam.equalsIgnoreCase("user") ) {
-                resp.sendRedirect("booking-list?message=Booking deleted successfully");
+                resp.sendRedirect("booking-list?message=Booking deleted successfully&page="+pageNo);
             }else if(sessionAdmin != null && fromParam.equalsIgnoreCase("admin")) {
-                resp.sendRedirect("admin/booking-list?message=Booking deleted successfully");
+                resp.sendRedirect("admin/booking-list?message=Booking deleted successfully&page="+pageNo);
             }
         } else {
-            resp.sendRedirect("booking-list?error=Failed to delete booking");
+            resp.sendRedirect("booking-list?error=Failed to delete booking&page="+pageNo);
         }
     }
 }

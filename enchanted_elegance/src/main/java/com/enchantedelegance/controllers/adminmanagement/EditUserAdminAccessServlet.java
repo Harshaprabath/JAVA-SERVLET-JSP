@@ -59,12 +59,21 @@ public class EditUserAdminAccessServlet extends HttpServlet {
 
         boolean updateSuccess = userDAO.updateUser(user);
 
+        //for navigate list current page
+        String pageParam = req.getParameter("page");
+        int pageNo =1;
+        if(pageParam != null && !pageParam.isEmpty() ){
+
+            pageNo =Integer.parseInt(pageParam);
+
+        }
+
         // 5️⃣ Handle redirection based on success or failure
         if (isFromURL) {
             if (updateSuccess) {
-                resp.sendRedirect("user-list?message=Edit successful");
+                resp.sendRedirect("user-list?message=Edit successful&page="+pageNo);
             } else {
-                resp.sendRedirect("pages/customer/edit-profile.jsp?id=" + user.getId() + "&error=Edit failed");
+                resp.sendRedirect("pages/customer/edit-profile.jsp?id=" + user.getId() + "&error=Edit failed&page="+pageNo);
             }
         } else {
             if (updateSuccess) {

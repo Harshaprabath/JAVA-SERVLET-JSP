@@ -6,6 +6,13 @@
             response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first"); // Redirect to the login page if not logged in
             return;
         }
+
+    int pageNo = 1;
+    // Get page no from URL
+    String pageParam = request.getParameter("page");
+    if(pageParam != null && !pageParam.isEmpty()){
+      pageNo = Integer.parseInt(pageParam);
+    }
 %>
 
 <!doctype html>
@@ -201,6 +208,7 @@
               <div class="card-body p-4 p-md-5">
                 <h2 class="mb-3 mb-md-3">Add New Admin</h2>
                 <form id="adminAddForm" class="w-100" action="/enchanted_elegance/admin/add-admin" method="post">
+                <input type="hidden" name="page" value="<%= pageNo %>">
                 <div class="row g-3">                   
                     <div class="col-12">                   
                     <div class="form-floating">

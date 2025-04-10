@@ -17,6 +17,13 @@
     // Get admin ID from URL
     String adminIdParam = request.getParameter("id");
    
+    int pageNo = 1;
+    // Get page no from URL
+    String pageParam = request.getParameter("page");
+    if(pageParam != null && !pageParam.isEmpty()){
+      pageNo = Integer.parseInt(pageParam);
+    }
+
     if (adminIdParam != null && !adminIdParam.isEmpty()) {
         int adminId = Integer.parseInt(adminIdParam);
         admin = adminDAO.getAdminById(adminId); // Fetch admin from DB
@@ -262,6 +269,7 @@
                 <% } %>
                 <form id="adminEditForm" class="w-100" action="/enchanted_elegance/admin/edit-admin" method="post">
                 <input type="hidden" name="id" value="<%= admin.getId() %>">
+                <input type="hidden" name="page" value="<%= pageNo %>">
                 <div class="row g-3">                   
                     <div class="col-12">                   
                     <div class="form-floating">

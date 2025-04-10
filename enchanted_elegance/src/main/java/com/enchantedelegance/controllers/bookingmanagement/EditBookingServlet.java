@@ -38,6 +38,13 @@ public class EditBookingServlet extends HttpServlet {
             note = "No Note" ;
         }
 
+        int pageNo=1;
+        String pageParam = req.getParameter("page"); //page number
+
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+
         Booking booking = bookingDAO.getBookingById(id);
         if (booking != null) {
             booking.setName(name);
@@ -48,12 +55,12 @@ public class EditBookingServlet extends HttpServlet {
             booking.setNote(note);
 
             if (bookingDAO.updateBooking(booking)) {
-               resp.sendRedirect("booking-list?success=Booking+update+successful");
+               resp.sendRedirect("booking-list?success=Booking+update+successful&page="+pageNo);
             } else {
-                resp.sendRedirect("pages/customer/edit-booking?error=Failed to update Booking");
+                resp.sendRedirect("pages/customer/edit-booking?error=Failed to update Booking&page="+pageNo);
             }
         } else {
-            resp.sendRedirect("booking-list?error=Booking not found");
+            resp.sendRedirect("booking-list?error=Booking not found&page="+pageNo);
         }
     }
 }
