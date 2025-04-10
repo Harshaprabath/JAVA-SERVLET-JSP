@@ -33,6 +33,13 @@ public class EditOfferServlet extends HttpServlet {
         String description = req.getParameter("description");
         String imageURL = req.getParameter("imageUrl"); // Fetch the image URL directly from the form
 
+        //page number for navigate req came page
+        String pageParam = req.getParameter("page");
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+
         Offer offer = offerDAO.getOfferById(id);
         if (offer != null) {
             offer.setTitle(title);
@@ -44,12 +51,12 @@ public class EditOfferServlet extends HttpServlet {
             }
 
             if (offerDAO.updateOffer(offer)) { // No need to pass InputStream anymore
-                resp.sendRedirect("offer-list?success=Offer+update+successful");
+                resp.sendRedirect("offer-list?success=Offer+update+successful&page="+pageNo);
             } else {
-                resp.sendRedirect("pages/admin/edit-offer?error=Failed to update Offer");
+                resp.sendRedirect("pages/admin/edit-offer?error=Failed to update Offer&page="+pageNo);
             }
         } else {
-            resp.sendRedirect("offer-list?error=Offer+not+found");
+            resp.sendRedirect("offer-list?error=Offer+not+found&page="+pageNo);
         }
     }
 }

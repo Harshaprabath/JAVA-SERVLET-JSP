@@ -1,47 +1,44 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
-<%@ page import="com.enchantedelegance.models.usermanagement.User" %>
-<%@ page import="com.enchantedelegance.dao.usermanagement.UserDAO" %>
+<%@ page import="com.enchantedelegance.models.offermanagement.Offer" %>
+<%@ page import="com.enchantedelegance.dao.offermanagement.OfferDAO" %>
+
 <%
     Admin admin = (Admin) session.getAttribute("admin");
-
-    UserDAO userDAO = new UserDAO();
-
-    User user =null;
-    
     if (admin == null) {
-        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
+        response.sendRedirect("login.jsp?error=Please+login+first");
         return;
     }
-    
-    // Get user ID from URL
-    String userIdParam = request.getParameter("id");
-   
+
+    String offerIdParam = request.getParameter("id");
+    OfferDAO offerDAO = new OfferDAO();
+    Offer offer = null;
+
+    if (offerIdParam != null && !offerIdParam.isEmpty()) {
+        int offerId = Integer.parseInt(offerIdParam);
+        offer = offerDAO.getOfferById(offerId);
+    }
+
+    if (offer == null) {
+        response.sendRedirect("/enchanted_elegance/admin/offer-list?error=Offer+not+found");
+        return;
+    }
+
     int pageNo = 1;
     // Get page no from URL
     String pageParam = request.getParameter("page");
     if(pageParam != null && !pageParam.isEmpty()){
       pageNo = Integer.parseInt(pageParam);
     }
-
-    if (userIdParam != null && !userIdParam.isEmpty()) {
-        int userId = Integer.parseInt(userIdParam);
-        user = userDAO.getUserById(userId); // Fetch user from DB
-    }
-
-    if(user == null){
-        response.sendRedirect("/enchanted_elegance/user-list?error=User not found");
-        return;
-    }
-          
 %>
+
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit User &mdash; Enchanted Elegance</title>
+  <title>Edit Offer &mdash; Enchanted Elegance</title>
   <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
 </head>
 
@@ -80,7 +77,6 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Admin</span>
             </li>
-            <%-- If admin edit: other admin (Link active) or edit profile himself --%>
             <li class="sidebar-item">
               <a class="sidebar-link" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
                 <span>
@@ -102,7 +98,7 @@
               <span class="hide-menu">Customer</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link active" href="/enchanted_elegance/user-list" aria-expanded="false">
+              <a class="sidebar-link" href="/enchanted_elegance/user-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-user"></i>
                 </span>
@@ -134,7 +130,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/enchanted_elegance/pages/admin/add-offer.jsp" aria-expanded="false">
+              <a class="sidebar-link active" href="/enchanted_elegance/pages/admin/add-offer.jsp" aria-expanded="false">
                 <span>
                   <i class="ti ti-plus"></i>
                 </span>
@@ -200,8 +196,8 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                  <%-- If admin edit: other admin or edit profile himself (Link active) --%>
-                   <a href="/enchanted_elegance/admin/profile?id=<%= admin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
+                  <%-- active --%>
+                    <a href="/enchanted_elegance/admin/profile?id=<%= admin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
@@ -226,63 +222,78 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-body p-4 p-md-5">
-                <h2 class="mb-3 mb-md-3">Edit User</h2>
-                <form id="userEditForm" class="w-100" action="/enchanted_elegance/edit-user" method="post">
-                <input type="hidden" name="id" value="<%= user.getId() %>">
-                <input type="hidden" name="page" value="<%= pageNo %>">
-                <div class="row g-3">                   
-                    <div class="col-12">                   
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="nameInput" placeholder="Name" name="name"  value="<%= user.getName() %>">
-                        <label for="nameInput" class="required">Name</label>
-                        <div id="nameError" class="error-message"></div>
-                    </div>                      
-                    </div>
-                    <div class="col-6">                   
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="mobileInput" placeholder="Mobile" name="mobile" value="<%= user.getMobile() %>">
-                        <label for="mobileInput" class="required">Mobile</label>
-                        <div id="mobileError" class="error-message"></div>
-                    </div>                     
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="emailInput" placeholder="Email Address" name="email" value="<%= user.getEmail() %>" >
-                        <label for="emailInput" class="required">Email Address</label>
-                        <div id="emailError" class="error-message"></div>
-                    </div>
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Blank: Keep current" name="password" >
-                        <label for="passwordInput">Password</label>
-                        <div id="passwordError" class="error-message"></div>                        
-                        <div class="text-primary">Blank: Want Keep current</div>
-                    </div>
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="password" class="form-control form-control-lg" id="confirmPasswordInput" placeholder="Password">
-                        <label for="confirmPasswordInput">Confirm Password</label>
-                        <div id="confirmPasswordError" class="error-message"></div>
-                    </div>
-                    </div>
-                    <div class="mt-3">
-                    <button type="submit" class="btn btn-primary py-2 rounded-2">
-                        Save Changes 
-                    </button>
-                    </div>
+<div class="card-body p-4 p-md-5">
+    <h2 class="mb-3 mb-md-3">Edit Offer</h2>
+    <form id="offerForm" class="w-100" action="/enchanted_elegance/admin/edit-offer" method="post">
+        <input type="hidden" name="id" value="<%= offer.getId() %>">
+        <input type="hidden" name="page" value="<%= pageNo %>">
+        
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="form-floating">
+                    <input type="text" class="form-control form-control-lg" id="titleInput" 
+                           placeholder="Title" name="title" value="<%= offer.getTitle() %>" required>
+                    <label for="titleInput" class="required">Title</label>
+                    <div id="titleError" class="error-message"></div>
                 </div>
-                </form>
-              </div>
+            </div>
+            
+            <div class="col-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control form-control-lg" id="discountInput" 
+                           placeholder="Discount" name="discount" value="<%= offer.getDiscount() %>" required>
+                    <label for="discountInput" class="required">Discount</label>
+                    <div id="discountError" class="error-message"></div>
+                </div>
+            </div>
+            
+            <div class="col-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control form-control-lg" id="imageUrlInput" 
+                           placeholder="Image URL" name="imageUrl" 
+                           value="<%= offer.getImage() != null ? offer.getImage() : "" %>" 
+                           oninput="loadImagePreview()">
+                    <label for="imageUrlInput" class="required">Image URL</label>
+                    <div id="imageUrlError" class="error-message"></div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <div class="form-floating">
+                    <textarea class="form-control form-control-lg" id="descriptionInput" 
+                              placeholder="Description" name="description" 
+                              style="height: 120px" required><%= offer.getDescription() %></textarea>
+                    <label for="descriptionInput" class="required">Description</label>
+                    <div id="descriptionError" class="error-message"></div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <img id="imagePreview" src="<%= offer.getImage() != null ? offer.getImage() : "" %>" 
+                     alt="Image Preview" class="img-thumbnail" 
+                     style="max-width: 200px; <%= (offer.getImage() != null && !offer.getImage().isEmpty()) ? "display: block" : "display: none" %>">
+            </div>
+            
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary py-2 rounded-2">
+                    Update Offer
+                </button>
+                <a href="/enchanted_elegance/admin/offer-list?page=<%= pageNo %>" 
+                   class="btn btn-outline-primary py-2 rounded-2 ms-2">
+                    Back to Offer List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
             </div>
           </div>
         </div>
       </div>  
     </div>
   </div>
-  <script src="/enchanted_elegance/pages/admin/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/enchanted_elegance/pages/admin/libs/jquery/dist/jquery.min.js"></scrip>
   <script src="/enchanted_elegance/pages/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/sidebarmenu.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/app.min.js"></script>
@@ -290,7 +301,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
-  <script src="/enchanted_elegance/pages/admin/js/user-edit-form.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/offer-form.js"></script>
 </body>
 
 </html>
