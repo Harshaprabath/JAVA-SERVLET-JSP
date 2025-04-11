@@ -29,18 +29,30 @@ public class EditContactServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         String status = req.getParameter("status");
 
+        //page number and filter id for navigate req came page
+        String pageParam = req.getParameter("page");
+        String filterIdParam = req.getParameter("filterId");
+
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+        int filterId = 1;
+        if (filterIdParam != null && !filterIdParam.isEmpty()) {
+            filterId = Integer.parseInt(filterIdParam);
+        }
 
         Contact contact = contactDAO.getContactById(id);
         if (contact != null) {
             contact.setStatus(status);
 
             if (contactDAO.updateContact(contact)) {
-               resp.sendRedirect("contact-list?success=Booking+update+successful");
+               resp.sendRedirect("contact-list?success=Booking+update+successful&page="+pageNo+"&filterId="+filterId);
             } else {
-                resp.sendRedirect("contact-list??error=Failed to update Booking");
+                resp.sendRedirect("contact-list??error=Failed to update Booking&page="+pageNo+"&filterId="+filterId);
             }
         } else {
-            resp.sendRedirect("contact-list?error=Booking not found");
+            resp.sendRedirect("contact-list?error=Booking not found&page="+pageNo+"&filterId="+filterId);
         }
     }
 }

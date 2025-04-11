@@ -30,13 +30,28 @@ public class GetAllFeedbacksServlet extends HttpServlet {
             return;
         }
 
+        String filterIdParam = req.getParameter("filterId");
+
+        int filterId = 1;
+        if (filterIdParam != null && !filterIdParam.isEmpty()) {
+            filterId = Integer.parseInt(filterIdParam);
+        }
+
+        List<Feedback> feedbacks= null;
         // Get all feedbacks from DAO
-        List<Feedback> feedbacks = feedbackDAO.getAllFeedbacks();
+        if(filterId==1){
+            feedbacks = feedbackDAO.getAllFeedbacks();
+        }else if(filterId==2){
+            feedbacks = feedbackDAO.getFeedbackPublished();
+        }else if(filterId==3){
+            feedbacks = feedbackDAO.getFeedbackUnPublished();
+        }
+
 
         // Set all feedbacks as request attribute
         req.setAttribute("feedbacks", feedbacks);
 
         // Forward the request to feedbacks list.jsp
-        req.getRequestDispatcher("../pages/admin/feedback-list.jsp").forward(req, resp);
+        req.getRequestDispatcher("../pages/admin/feedback-list.jsp?filterId="+filterId).forward(req, resp);
     }
 }

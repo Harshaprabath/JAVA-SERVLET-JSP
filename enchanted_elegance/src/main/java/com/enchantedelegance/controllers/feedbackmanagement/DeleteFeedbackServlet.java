@@ -28,6 +28,19 @@ public class DeleteFeedbackServlet extends HttpServlet {
             return;
         }
 
+        //page number and filter id for navigate req came page
+        String pageParam = req.getParameter("page");
+        String filterIdParam = req.getParameter("filterId");
+
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+        int filterId = 1;
+        if (filterIdParam != null && !filterIdParam.isEmpty()) {
+            filterId = Integer.parseInt(filterIdParam);
+        }
+
         // get feedback ID is provided in the request parameter
         String feedbackIdParam = req.getParameter("id");
 
@@ -37,23 +50,23 @@ public class DeleteFeedbackServlet extends HttpServlet {
             try {
                 feedbackId = Integer.parseInt(feedbackIdParam); // Use the ID from URL
             } catch (NumberFormatException e) {
-                resp.sendRedirect("feedback-list?error=Invalid feedback ID");
+                resp.sendRedirect("feedback-list?error=Invalid feedback ID&page="+pageNo+"&filterId="+filterId);
                 return;
             }
         }
 
         if (feedbackId == -1) {
-            resp.sendRedirect("feedback-list?error=feedback ID not found");
+            resp.sendRedirect("feedback-list?error=feedback ID not found&page="+pageNo+"&filterId="+filterId);
             return;
         }
 
         // Perform deletion
         if (feedbackDAO.deleteFeedbackById(feedbackId)) {
             if(sessionAdmin != null) {
-                resp.sendRedirect("feedback-list?message=Feedback deleted successfully");
+                resp.sendRedirect("feedback-list?message=Feedback deleted successfully&page="+pageNo+"&filterId="+filterId);
             }
         } else {
-            resp.sendRedirect("feedback-list?error=Failed to delete feedback");
+            resp.sendRedirect("feedback-list?error=Failed to delete feedback&page="+pageNo+"&filterId="+filterId);
         }
     }
 }

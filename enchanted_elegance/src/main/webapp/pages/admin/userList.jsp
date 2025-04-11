@@ -47,7 +47,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin List &mdash; Enchanted Elegance</title>
+  <title>User List &mdash; Enchanted Elegance</title>
   <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
 </head>
 

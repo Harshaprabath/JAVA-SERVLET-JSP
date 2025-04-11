@@ -29,12 +29,19 @@ public class AddOfferServlet extends HttpServlet {
         String description = req.getParameter("description");
         String imageURL = req.getParameter("imageUrl"); // Image URL input
 
+        //page number for navigate req came page
+        String pageParam = req.getParameter("page");
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+
         // Validate input fields (basic validation)
         if (title == null || title.trim().isEmpty() ||
                 discount == null || discount.trim().isEmpty() ||
                 description == null || description.trim().isEmpty() ||
                 imageURL == null || imageURL.trim().isEmpty()) {
-            resp.sendRedirect("../pages/admin/add-offer.jsp?error=All+fields+are+required");
+            resp.sendRedirect("../pages/admin/add-offer.jsp?error=All+fields+are+required&page="+pageNo);
             return;
         }
 
@@ -46,9 +53,9 @@ public class AddOfferServlet extends HttpServlet {
         boolean isAdded = offerDAO.addOffer(offer);
 
         if (isAdded) {
-            resp.sendRedirect("../admin/offer-list?success=Offer+added+successfully");
+            resp.sendRedirect("../admin/offer-list?success=Offer+added+successfully&page="+pageNo);
         } else {
-            resp.sendRedirect("../pages/admin/add-offer.jsp?error=Failed+to+add+offer");
+            resp.sendRedirect("../pages/admin/add-offer.jsp?error=Failed+to+add+offer&page="+pageNo);
         }
     }
 }

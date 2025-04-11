@@ -33,10 +33,17 @@ public class DeleteOfferServlet extends HttpServlet {
             return;
         }
 
+        //page number for navigate req came page
+        String pageParam = req.getParameter("page");
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+
         if (offerDAO.deleteOfferById(offerId)) {
-            resp.sendRedirect("offer-list?message=Offer deleted successfully");
+            resp.sendRedirect("offer-list?message=Offer deleted successfully&page="+pageNo);
         } else {
-            resp.sendRedirect("offer-list?error=Failed to delete offer");
+            resp.sendRedirect("offer-list?error=Failed to delete offer&page="+pageNo);
         }
     }
 }

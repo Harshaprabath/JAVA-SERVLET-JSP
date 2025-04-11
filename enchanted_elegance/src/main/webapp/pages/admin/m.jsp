@@ -1,22 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
-<%@ page import="com.enchantedelegance.models.usermanagement.User" %>
-<%@ page import="com.enchantedelegance.dao.usermanagement.UserDAO" %>
+<%@ page import="com.enchantedelegance.models.feedbackmanagement.Feedback" %>
+<%@ page import="com.enchantedelegance.dao.feedbackmanagement.FeedbackDAO" %>
+
 <%
     Admin admin = (Admin) session.getAttribute("admin");
-
-    UserDAO userDAO = new UserDAO();
-
-    User user =null;
-    
     if (admin == null) {
-        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
+        response.sendRedirect("../../admin?error=Please login first");
         return;
     }
-    
-    // Get user ID from URL
-    String userIdParam = request.getParameter("id");
-   
+
+    String feedbackIdParam = request.getParameter("id");
+    Feedback feedback = new Feedback();
+    FeedbackDAO feedbackDAO = new FeedbackDAO();
+
     int pageNo = 1;
     // Get page no from URL
     String pageParam = request.getParameter("page");
@@ -24,16 +21,21 @@
       pageNo = Integer.parseInt(pageParam);
     }
 
-    if (userIdParam != null && !userIdParam.isEmpty()) {
-        int userId = Integer.parseInt(userIdParam);
-        user = userDAO.getUserById(userId); // Fetch user from DB
+    int filter = 1;
+    // Get filter from request parameter
+    if(request.getParameter("filterId") != null) {
+        filter = Integer.parseInt(request.getParameter("filterId"));
     }
 
-    if(user == null){
-        response.sendRedirect("/enchanted_elegance/user-list?error=User not found");
+    if (feedbackIdParam != null && !feedbackIdParam.isEmpty()) {
+        int feedbackId = Integer.parseInt(feedbackIdParam);
+        feedback = feedbackDAO.getFeedbackById(feedbackId);
+    }
+    if(feedback == null){
+        response.sendRedirect("/enchanted_elegance/admin/feedback-list?error=Feedback not found");
         return;
     }
-          
+    
 %>
 <!doctype html>
 <html lang="en">
@@ -228,53 +230,81 @@
             <div class="card">
               <div class="card-body p-4 p-md-5">
                 <h2 class="mb-3 mb-md-3">Edit User</h2>
-                <form id="userEditForm" class="w-100" action="/enchanted_elegance/edit-user" method="post">
-                <input type="hidden" name="id" value="<%= user.getId() %>">
-                <input type="hidden" name="page" value="<%= pageNo %>">
-                <div class="row g-3">                   
-                    <div class="col-12">                   
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="nameInput" placeholder="Name" name="name"  value="<%= user.getName() %>">
-                        <label for="nameInput" class="required">Name</label>
-                        <div id="nameError" class="error-message"></div>
-                    </div>                      
-                    </div>
-                    <div class="col-6">                   
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="mobileInput" placeholder="Mobile" name="mobile" value="<%= user.getMobile() %>">
-                        <label for="mobileInput" class="required">Mobile</label>
-                        <div id="mobileError" class="error-message"></div>
-                    </div>                     
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="emailInput" placeholder="Email Address" name="email" value="<%= user.getEmail() %>" >
-                        <label for="emailInput" class="required">Email Address</label>
-                        <div id="emailError" class="error-message"></div>
-                    </div>
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Blank: Keep current" name="password" >
-                        <label for="passwordInput">Password</label>
-                        <div id="passwordError" class="error-message"></div>                        
-                        <div class="text-primary">Blank: Want Keep current</div>
-                    </div>
-                    </div>
-                    <div class="col-6">
-                    <div class="form-floating">
-                        <input type="password" class="form-control form-control-lg" id="confirmPasswordInput" placeholder="Password">
-                        <label for="confirmPasswordInput">Confirm Password</label>
-                        <div id="confirmPasswordError" class="error-message"></div>
-                    </div>
-                    </div>
-                    <div class="mt-3">
-                    <button type="submit" class="btn btn-primary py-2 rounded-2">
-                        Save Changes 
-                    </button>
-                    </div>
-                </div>
-                </form>
+<form id="feedback-form" class="w-100" action="/enchanted_elegance/admin/edit-feedback" method="post">
+    <input type="hidden" name="id" value="<%= feedback.getId() %>">
+    <input type="hidden" name="page" value="<%= pageNo %>">
+    <input type="hidden" name="filterId" value="<%= filter %>">
+
+    <div class="row g-3">
+        <!-- Name Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-lg" id="nameInput" 
+                       placeholder="Name" name="name" value="<%= feedback.getName() %>" required>
+                <label for="nameInput" class="required">Name</label>
+                <div id="nameError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="email" class="form-control form-control-lg" id="emailInput" 
+                       placeholder="Email" name="email" value="<%= feedback.getEmail() %>" required>
+                <label for="emailInput" class="required">Email</label>
+                <div id="emailError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Mobile Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-lg" id="mobileInput" 
+                       placeholder="Mobile" name="mobile" value="<%= feedback.getMobile() %>" required>
+                <label for="mobileInput" class="required">Mobile</label>
+                <div id="mobileError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Message Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <textarea class="form-control form-control-lg" id="messageInput" 
+                          placeholder="Message" name="message" style="height: 150px;" required><%= feedback.getMessage() %></textarea>
+                <label for="messageInput" class="required">Message</label>
+                <div id="messageError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Date Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="date" class="form-control form-control-lg" id="dateInput" 
+                       name="date" value="<%= feedback.getDate() %>" required>
+                <label for="dateInput" class="required">Date</label>
+                <div id="dateError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Publication Status -->
+        <div class="col-12">
+            <div class="form-floating">
+                <select class="form-select form-control-lg" id="publishInput" name="isPublish">
+                    <option value="false" <%= !feedback.isPublish() ? "selected" : "" %>>Not Published</option>
+                    <option value="true" <%= feedback.isPublish() ? "selected" : "" %>>Published</option>
+                </select>
+                <label for="publishInput">Publication Status</label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary py-2 rounded-2">
+                Save Changes
+            </button>
+        </div>
+    </div>
+</form>
               </div>
             </div>
           </div>
@@ -290,7 +320,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
-  <script src="/enchanted_elegance/pages/admin/js/user-edit-form.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/feedback-edit-form.js"></script>
 </body>
 
 </html>
