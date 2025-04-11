@@ -28,13 +28,29 @@ public class GetAllContactsServlet extends HttpServlet {
             return;
         }
 
-        // Get all contact message from DAO
-        List<Contact> contacts = contactDAO.getAllContacts();
+        String filterIdParam = req.getParameter("filterId");
+
+        int filterId = 1;
+        if (filterIdParam != null && !filterIdParam.isEmpty()) {
+            filterId = Integer.parseInt(filterIdParam);
+        }
+
+        List<Contact> contacts= null;
+        // Get all feedbacks from DAO
+        if(filterId==1){
+            contacts = contactDAO.getAllContacts();
+        }else if(filterId==2){
+            contacts = contactDAO.getAllPendingContact();
+        }else if(filterId==3){
+            contacts = contactDAO.getAllProcessingContact();
+        }else if(filterId==4){
+            contacts = contactDAO.getAllCompletedContact();
+        }
 
         // Set all contact message as request attribute
         req.setAttribute("contacts", contacts);
 
         // Forward the request to contacts list.jsp
-        req.getRequestDispatcher("../pages/admin/contact-list.jsp").forward(req, resp);
+        req.getRequestDispatcher("../pages/admin/contact-list.jsp?filterId="+filterId).forward(req, resp);
     }
 }

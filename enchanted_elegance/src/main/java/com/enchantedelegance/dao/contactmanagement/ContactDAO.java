@@ -54,6 +54,47 @@ public class ContactDAO {
         return null; // contact not found
     }
 
+    // Get all pending contacts
+    public List<Contact> getAllPendingContact() {
+        List<Contact> pendingContact = new ArrayList<>();
+        List<Contact> contacts = this.getAllContacts();
+
+        for (Contact contact : contacts) {
+            if (contact.getStatus().equalsIgnoreCase("pending")) {
+                pendingContact.add(contact);
+            }
+        }
+
+        return pendingContact;
+    }
+
+    // Get all processing contacts
+    public List<Contact> getAllProcessingContact() {
+        List<Contact> processingContact = new ArrayList<>();
+        List<Contact> contacts = this.getAllContacts();
+
+        for (Contact contact : contacts) {
+            if (contact.getStatus().equalsIgnoreCase("processing")) {
+                processingContact.add(contact);
+            }
+        }
+
+        return processingContact;
+    }
+
+    // Get all completed contacts
+    public List<Contact> getAllCompletedContact() {
+        List<Contact> completedContact = new ArrayList<>();
+        List<Contact> contacts = this.getAllContacts();
+
+        for (Contact contact : contacts) {
+            if (contact.getStatus().equalsIgnoreCase("completed")) {
+                completedContact.add(contact);
+            }
+        }
+
+        return completedContact;
+    }
 
     // Add a new contact message to the text file
     public boolean addContact(Contact contact) {

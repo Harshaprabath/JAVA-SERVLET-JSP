@@ -2,114 +2,367 @@
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
 <%@ page import="com.enchantedelegance.models.contactmanagement.Contact" %>
 <%@ page import="java.util.List" %>
+
 <%
-    Admin admin = (Admin) session.getAttribute("admin");
-    if (admin == null) {
-        response.sendRedirect("login.jsp?error=Please login first");
+    Admin adminSession = (Admin) session.getAttribute("admin");
+    if (adminSession == null) {
+        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
         return;
     }
+
+    int filter = 1;
+    // Get filter from request parameter
+    if(request.getParameter("filterId") != null) {
+        filter = Integer.parseInt(request.getParameter("filterId"));
+    }
+
+    List<Contact> allContacts = (List<Contact>) request.getAttribute("contacts");
+    int currentPage = 1;
+    int recordsPerPage = 5;
+    
+    // Get current page from request parameter
+    if(request.getParameter("page") != null) {
+        currentPage = Integer.parseInt(request.getParameter("page"));
+    }
+    
+    // Calculate pagination values
+    int totalRecords = allContacts != null ? allContacts.size() : 0;
+    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+
+    // If current page is greater than total pages and not page 1, redirect to previous page
+    if (currentPage > totalPages && totalPages > 0) {
+        response.sendRedirect("?page=" + (currentPage - 1) + "&filterId=" + filter);
+        return;
+    }
+    
+    // If no records and not on page 1, redirect to page 1
+    if (totalRecords == 0 && currentPage != 1) {
+        response.sendRedirect("?page=1&filterId=" + filter);
+        return;
+    }
+
+    int start = (currentPage - 1) * recordsPerPage;
+    int end = Math.min(start + recordsPerPage, totalRecords);
+    
+    // Get sublist for current page
+    List<Contact> contacts = allContacts != null ? allContacts.subList(start, end) : null;
 %>
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    <title>Contact List</title>
-    <style>
-        .message-cell {
-            max-width: 300px;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-        #status-filter {
-            margin-bottom: 10px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact List &mdash; Enchanted Elegance</title>
+  <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
 </head>
+
 <body>
-    <h1>Contact Messages List</h1>
-
-    <div id="status-filter">
-        <label for="filter-select">Filter by Status: </label>
-        <select id="filter-select">
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="completed">Completed</option>
-        </select>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="/enchanted_elegance/pages/admin/index.jsp" class="text-nowrap">
+            <h4><span class="text-primary">E</span>nchanted <span class="text-primary">E</span>legance</h4>
+          </a>
+          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <i class="ti ti-x fs-8"></i>
+          </div>
+        </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/pages/admin/index.jsp" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Admin</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-user"></i>
+                </span>
+                <span class="hide-menu">All Admins</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/pages/admin/add-admin.jsp" aria-expanded="false">
+                <span>
+                  <i class="ti ti-user-plus"></i>
+                </span>
+                <span class="hide-menu">Add Admin</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Customer</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/user-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-user"></i>
+                </span>
+                <span class="hide-menu">All Users</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Booking</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/admin/booking-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-description"></i>
+                </span>
+                <span class="hide-menu">All Booking</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Offer</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/admin/offer-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-cards"></i>
+                </span>
+                <span class="hide-menu">All Offers</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/pages/admin/add-offer.jsp" aria-expanded="false">
+                <span>
+                  <i class="ti ti-plus"></i>
+                </span>
+                <span class="hide-menu">Add Offers</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Contact</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link active" href="/enchanted_elegance/admin/contact-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-bell-ringing"></i>
+                </span>
+                <span class="hide-menu">All Contacts</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Feedback</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/enchanted_elegance/admin/feedback-list" aria-expanded="false">
+                <span>
+                  <i class="ti ti-mood-happy"></i>
+                </span>
+                <span class="hide-menu">All Feedbacks</span>
+              </a>
+            </li>
+          </ul>
+          </nav>
+        <!-- End Sidebar navigation -->
+      </div>
+      <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <header class="app-header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <ul class="navbar-nav">
+            <li class="nav-item d-block d-xl-none">
+              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                <i class="ti ti-menu-2"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                <i class="ti ti-bell-ringing"></i>
+                <div class="notification bg-primary rounded-circle"></div>
+              </a>
+            </li>
+          </ul>
+          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+              <a href="/enchanted_elegance" target="_blank" class="btn btn-primary">Visi Site</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <img src="/enchanted_elegance/pages/admin/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                  <div class="message-body">
+                  <%-- active --%>
+                    <a href="/enchanted_elegance/admin/profile?id=<%= adminSession.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">My Profile</p>
+                    </a>
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-mail fs-6"></i>
+                      <p class="mb-0 fs-3">My Account</p>
+                    </a>
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-list-check fs-6"></i>
+                      <p class="mb-0 fs-3">My Task</p>
+                    </a>
+                    <a href="/enchanted_elegance/admin/logout" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <div class="container-fluid">
+          <!-- Row 1 -->
+          <div class="row">
+              <div class="col-lg-12 d-flex align-items-strech">
+                  <div class="card w-100">
+                    <div class="card-body">
+                        <div class="d-sm-flex d-block align-items-center justify-content-between mb-3 mb-lg-4">
+                            <div class="mb-2 mb-sm-0">
+                                <h5 class="card-title fw-semibold mb-0">Contact Messages List</h5>
+                            </div>
+                            <div id="status-filter" class="d-flex align-items-center">
+                                <label for="filter-select" class="me-2 mb-0">Filter by Status: </label>
+                                <select id="filter-select" class="form-select form-select-sm" style="width: auto;">
+                                    <option value="all">All</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <div class="ad-taade-container">
+                                <table class="ad-taade table table-hover mb-0" id="contacts-table">
+                                    <thead class="ad-thead">
+                                        <tr>
+                                            <th class="ad-th text-nowrap">ID</th>
+                                            <th class="ad-th text-nowrap">Name</th>
+                                            <th class="ad-th text-nowrap">Email</th>
+                                            <th class="ad-th text-nowrap">Mobile</th>
+                                            <th class="ad-th text-nowrap">Subject</th>
+                                            <th class="ad-th text-nowrap">Message</th>
+                                            <th class="ad-th text-nowrap">Status</th>
+                                            <th class="ad-th text-center text-nowrap">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            if (contacts != null && !contacts.isEmpty()) {
+                                                for (Contact contact : contacts) {
+                                        %>
+                                        <tr class="align-middle" data-status="<%= contact.getStatus() %>">
+                                            <td class="ad-td fs-sm"><%= contact.getId() %></td>
+                                            <td class="ad-td fs-sm"><%= contact.getName() %></td>
+                                            <td class="ad-td fs-sm"><%= contact.getEmail() %></td>
+                                            <td class="ad-td fs-sm"><%= contact.getMobile() %></td>
+                                            <td class="ad-td fs-sm"><%= contact.getSubject() %></td>
+                                            <td class="ad-td fs-sm text-truncate message-cell"><%= contact.getMessage() %></td>
+                                            <td class="ad-td fs-sm">
+                                                <form action="../admin/edit-contact" method="post" class="d-inline m-0">
+                                                    <input type="hidden" name="id" value="<%= contact.getId() %>">
+                                                    <input type="hidden" name="page" value="<%= currentPage %>">
+                                                    <input type="hidden" name="filterId" value="<%= filter %>">
+                                                    <select name="status" class="form-select form-select-sm" required onchange="this.form.submit()" style="width: auto;">
+                                                        <option value="pending" <%= "pending".equals(contact.getStatus()) ? "selected" : "" %>>Pending</option>
+                                                        <option value="processing" <%= "processing".equals(contact.getStatus()) ? "selected" : "" %>>Processing</option>
+                                                        <option value="completed" <%= "completed".equals(contact.getStatus()) ? "selected" : "" %>>Completed</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            <td class="ad-td-action">
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <form action="../admin/delete-contact" method="post" class="d-inline m-0">
+                                                        <input type="hidden" name="id" value="<%= contact.getId() %>">
+                                                        <input type="hidden" name="page" value="<%= currentPage %>">
+                                                        <input type="hidden" name="filterId" value="<%= filter %>">
+                                                        <button type="submit" 
+                                                                class="ad-btn ad-delete d-flex align-items-center justify-content-center"
+                                                                style="width: 30px; height: 30px;"
+                                                                onclick="return confirm('Are you sure?')">
+                                                            <i class="ti ti-trash fs-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <%
+                                                }
+                                            } else {
+                                        %>
+                                        <tr>
+                                            <td colspan="8" class="text-center py-4 fs-sm">No contact messages found.</td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <%-- Pagination --%>
+                            <% if (totalPages > 1) { %>
+                            <nav aria-label="Page navigation" class="mt-3">
+                                <ul class="pagination justify-content-center">
+                                    <%-- Previous button --%>
+                                    <li class="page-item <%= currentPage == 1 ? "disabled" : "" %>">
+                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&filterId=<%= filter %>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <%-- Page numbers --%>
+                                    <% for (int i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i == currentPage ? "active" : "" %>">
+                                            <a class="page-link" href="?page=<%= i %>&filterId=<%= filter %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <%-- Next button --%>
+                                    <li class="page-item <%= currentPage == totalPages ? "disabled" : "" %>">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&filterId=<%= filter %>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <% } %>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>  
     </div>
-
-    <table border="1" id="contacts-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Mobile</th>
-                <th>Subject</th>
-                <th>Message</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Contact> contacts = (List<Contact>) request.getAttribute("contacts");
-                if (contacts != null && !contacts.isEmpty()) {
-                    for (Contact contact : contacts) {
-            %>
-            <tr data-status="<%= contact.getStatus() %>">
-                <td><%= contact.getId() %></td>
-                <td><%= contact.getName() %></td>
-                <td><%= contact.getEmail() %></td>
-                <td><%= contact.getMobile() %></td>
-                <td><%= contact.getSubject() %></td>
-                <td class="message-cell"><%= contact.getMessage() %></td>
-                <td>
-                    <form action="./edit-contact" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="<%= contact.getId() %>">
-                        <select name="status" required onchange="this.form.submit()">
-                            <option value="pending" <%= "pending".equals(contact.getStatus()) ? "selected" : "" %>>Pending</option>
-                            <option value="processing" <%= "processing".equals(contact.getStatus()) ? "selected" : "" %>>Processing</option>
-                            <option value="completed" <%= "completed".equals(contact.getStatus()) ? "selected" : "" %>>Completed</option>
-                        </select>
-                    </form>
-                </td>
-                <td>
-                    <form action="./delete-contact" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="<%= contact.getId() %>">
-                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <%
-                    }
-                } else {
-            %>
-            <tr>
-                <td colspan="9">No Contact message found.</td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterSelect = document.getElementById('filter-select');
-            const contactRows = document.querySelectorAll('#contacts-table tbody tr');
-
-            filterSelect.addEventListener('change', function() {
-                const selectedStatus = this.value;
-
-                contactRows.forEach(row => {
-                    const rowStatus = row.getAttribute('data-status');
-
-                    if (selectedStatus === 'all' || rowStatus === selectedStatus) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
+  </div>
+  <script src="/enchanted_elegance/pages/admin/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/enchanted_elegance/pages/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/sidebarmenu.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/app.min.js"></script>
+  <script src="/enchanted_elegance/pages/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
+  <script src="/enchanted_elegance/pages/admin/js/contact-list-filter.js"></script>
 </body>
+
 </html>

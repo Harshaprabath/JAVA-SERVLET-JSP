@@ -36,6 +36,18 @@ public class EditFeedbackServlet extends HttpServlet {
         String date = req.getParameter("date");
         boolean isPublish = Boolean.parseBoolean(req.getParameter("isPublish"));
 
+        //page number and filter id for navigate req came page
+        String pageParam = req.getParameter("page");
+        String filterIdParam = req.getParameter("filterId");
+
+        int pageNo=1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            pageNo = Integer.parseInt(pageParam);
+        }
+        int filterId = 1;
+        if (filterIdParam != null && !filterIdParam.isEmpty()) {
+            filterId = Integer.parseInt(filterIdParam);
+        }
 
         Feedback feedback = feedbackDAO.getFeedbackById(id);
         if (feedback != null) {
@@ -47,12 +59,12 @@ public class EditFeedbackServlet extends HttpServlet {
             feedback.setPublish(isPublish);
 
             if (feedbackDAO.updateFeedback(feedback)) {
-               resp.sendRedirect("feedback-list?success=Booking+update+successful");
+               resp.sendRedirect("feedback-list?success=Booking+update+successful&page="+pageNo+"&filterId="+filterId);
             } else {
-                resp.sendRedirect("pages/admin/edit-feedback?error=Failed to update Booking");
+                resp.sendRedirect("pages/admin/edit-feedback?error=Failed to update Booking&page="+pageNo+"&filterId="+filterId);
             }
         } else {
-            resp.sendRedirect("feedback-list?error=Booking not found");
+            resp.sendRedirect("feedback-list?error=Booking not found&page="+pageNo+"&filterId="+filterId);
         }
     }
 }

@@ -29,7 +29,8 @@ public class GetAllFeedbacksServlet extends HttpServlet {
             resp.sendRedirect("../pages/admin/login.jsp");
             return;
         }
-        String filterIdParam = req.getParameter("filterId"); //page number
+
+        String filterIdParam = req.getParameter("filterId");
 
         int filterId = 1;
         if (filterIdParam != null && !filterIdParam.isEmpty()) {

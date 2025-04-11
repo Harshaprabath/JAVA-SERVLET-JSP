@@ -1,13 +1,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.enchantedelegance.models.adminmanagement.Admin" %>
 <%@ page import="com.enchantedelegance.models.feedbackmanagement.Feedback" %>
-<%@ page import="java.util.List" %>
+<%@ page import="com.enchantedelegance.dao.feedbackmanagement.FeedbackDAO" %>
 
 <%
-    Admin adminSession = (Admin) session.getAttribute("admin");
-    if (adminSession == null) {
-        response.sendRedirect("/enchanted_elegance/pages/admin/login.jsp?error=Please login first");
+    Admin admin = (Admin) session.getAttribute("admin");
+    if (admin == null) {
+        response.sendRedirect("../../admin?error=Please login first");
         return;
+    }
+
+    String feedbackIdParam = request.getParameter("id");
+    Feedback feedback = new Feedback();
+    FeedbackDAO feedbackDAO = new FeedbackDAO();
+
+    int pageNo = 1;
+    // Get page no from URL
+    String pageParam = request.getParameter("page");
+    if(pageParam != null && !pageParam.isEmpty()){
+      pageNo = Integer.parseInt(pageParam);
     }
 
     int filter = 1;
@@ -16,36 +27,15 @@
         filter = Integer.parseInt(request.getParameter("filterId"));
     }
 
-    List<Feedback> allFeedbacks = (List<Feedback>) request.getAttribute("feedbacks");
-    int currentPage = 1;
-    int recordsPerPage = 5;
-    
-    // Get current page from request parameter
-    if(request.getParameter("page") != null) {
-        currentPage = Integer.parseInt(request.getParameter("page"));
+    if (feedbackIdParam != null && !feedbackIdParam.isEmpty()) {
+        int feedbackId = Integer.parseInt(feedbackIdParam);
+        feedback = feedbackDAO.getFeedbackById(feedbackId);
     }
-    
-    // Calculate pagination values
-    int totalRecords = allFeedbacks != null ? allFeedbacks.size() : 0;
-    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
-
-    // If current page is greater than total pages and not page 1, redirect to previous page
-    if (currentPage > totalPages && totalPages > 0) {
-        response.sendRedirect("?page=" + (currentPage - 1));
+    if(feedback == null){
+        response.sendRedirect("/enchanted_elegance/admin/feedback-list?error=Feedback not found");
         return;
     }
     
-    // If no records and not on page 1, redirect to page 1
-    if (totalRecords == 0 && currentPage != 1) {
-        response.sendRedirect("?page=1");
-        return;
-    }
-
-    int start = (currentPage - 1) * recordsPerPage;
-    int end = Math.min(start + recordsPerPage, totalRecords);
-    
-    // Get sublist for current page
-    List<Feedback> feedbacks = allFeedbacks != null ? allFeedbacks.subList(start, end) : null;
 %>
 <!doctype html>
 <html lang="en">
@@ -53,7 +43,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Offer List &mdash; Enchanted Elegance</title>
+  <title>Edit User &mdash; Enchanted Elegance</title>
   <link rel="stylesheet" href="/enchanted_elegance/pages/admin/css/styles.min.css" />
 </head>
 
@@ -92,6 +82,7 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Admin</span>
             </li>
+            <%-- If admin edit: other admin (Link active) or edit profile himself --%>
             <li class="sidebar-item">
               <a class="sidebar-link" href="/enchanted_elegance/admin/admin-list" aria-expanded="false">
                 <span>
@@ -113,7 +104,7 @@
               <span class="hide-menu">Customer</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/enchanted_elegance/user-list" aria-expanded="false">
+              <a class="sidebar-link active" href="/enchanted_elegance/user-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-user"></i>
                 </span>
@@ -137,7 +128,7 @@
               <span class="hide-menu">Offer</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link active" href="/enchanted_elegance/admin/offer-list" aria-expanded="false">
+              <a class="sidebar-link" href="/enchanted_elegance/admin/offer-list" aria-expanded="false">
                 <span>
                   <i class="ti ti-cards"></i>
                 </span>
@@ -211,8 +202,8 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                  <%-- active --%>
-                    <a href="/enchanted_elegance/admin/profile?id=<%= adminSession.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
+                  <%-- If admin edit: other admin or edit profile himself (Link active) --%>
+                   <a href="/enchanted_elegance/admin/profile?id=<%= admin.getId() %>" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
@@ -233,116 +224,91 @@
         </nav>
       </header>
       <div class="container-fluid">
-          <!-- Row 1 -->
-          <div class="row">
-              <div class="col-lg-12 d-flex align-items-strech">
-                  <div class="card w-100">
- <div class="card-body">
-    <div class="d-sm-flex d-block align-items-center justify-content-between mb-3 mb-lg-4">
-        <div class="mb-2 mb-sm-0">
-            <h5 class="card-title fw-semibold mb-0">Feedback List</h5>
+        <!-- Row 1 -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body p-4 p-md-5">
+                <h2 class="mb-3 mb-md-3">Edit User</h2>
+<form id="feedback-form" class="w-100" action="/enchanted_elegance/admin/edit-feedback" method="post">
+    <input type="hidden" name="id" value="<%= feedback.getId() %>">
+    <input type="hidden" name="page" value="<%= pageNo %>">
+    <input type="hidden" name="filterId" value="<%= filter %>">
+
+    <div class="row g-3">
+        <!-- Name Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-lg" id="nameInput" 
+                       placeholder="Name" name="name" value="<%= feedback.getName() %>" required>
+                <label for="nameInput" class="required">Name</label>
+                <div id="nameError" class="error-message"></div>
+            </div>
         </div>
-        <div id="publications-filter" class="d-flex align-items-center">
-            <label for="filter-select" class="me-2 mb-0">Filter by publication: </label>
-            <select id="filter-select" class="form-select form-select-sm" style="width: auto;">
-                <option value="all">All</option>
-                <option value="true">Published</option>
-                <option value="false">Non-Published</option>
-            </select>
+
+        <!-- Email Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="email" class="form-control form-control-lg" id="emailInput" 
+                       placeholder="Email" name="email" value="<%= feedback.getEmail() %>" required>
+                <label for="emailInput" class="required">Email</label>
+                <div id="emailError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Mobile Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-lg" id="mobileInput" 
+                       placeholder="Mobile" name="mobile" value="<%= feedback.getMobile() %>" required>
+                <label for="mobileInput" class="required">Mobile</label>
+                <div id="mobileError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Message Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <textarea class="form-control form-control-lg" id="messageInput" 
+                          placeholder="Message" name="message" style="height: 150px;" required><%= feedback.getMessage() %></textarea>
+                <label for="messageInput" class="required">Message</label>
+                <div id="messageError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Date Field -->
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="date" class="form-control form-control-lg" id="dateInput" 
+                       name="date" value="<%= feedback.getDate() %>" required>
+                <label for="dateInput" class="required">Date</label>
+                <div id="dateError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Publication Status -->
+        <div class="col-12">
+            <div class="form-floating">
+                <select class="form-select form-control-lg" id="publishInput" name="isPublish">
+                    <option value="false" <%= !feedback.isPublish() ? "selected" : "" %>>Not Published</option>
+                    <option value="true" <%= feedback.isPublish() ? "selected" : "" %>>Published</option>
+                </select>
+                <label for="publishInput">Publication Status</label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary py-2 rounded-2">
+                Save Changes
+            </button>
         </div>
     </div>
-    <div class="table-responsive">
-        <div class="ad-taade-container">
-            <table class="ad-taade table table-hover mb-0">
-                <thead class="ad-thead">
-                    <tr>
-                        <th class="ad-th text-nowrap">ID</th>
-                        <th class="ad-th text-nowrap">Name</th>
-                        <th class="ad-th text-nowrap">Email</th>
-                        <th class="ad-th text-nowrap">Mobile</th>
-                        <th class="ad-th text-nowrap">Message</th>
-                        <th class="ad-th text-nowrap">Date</th>
-                        <th class="ad-th text-nowrap">Published</th>
-                        <th class="ad-th text-center text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        if (feedbacks != null && !feedbacks.isEmpty()) {
-                            for (Feedback feedback : feedbacks) {
-                    %>
-                    <tr class="align-middle" data-publications="<%= feedback.isPublish() %>">
-                        <td class="ad-td fs-sm"><%= feedback.getId() %></td>
-                        <td class="ad-td fs-sm"><%= feedback.getName() %></td>
-                        <td class="ad-td fs-sm"><%= feedback.getEmail() %></td>
-                        <td class="ad-td fs-sm"><%= feedback.getMobile() %></td>
-                        <td class="ad-td fs-sm text-truncate message-cell"><%= feedback.getMessage() %></td>
-                        <td class="ad-td fs-sm"><%= feedback.getDate() %></td>
-                        <td class="ad-td fs-sm"><%= feedback.isPublish() ? "Yes" : "No" %></td>
-                        <td class="ad-td-action">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="../pages/admin/edit-feedback.jsp?id=<%= feedback.getId() %>&page=<%= currentPage %>&filterId=<%= filter %>" 
-                                class="ad-btn ad-edit text-decoration-none d-flex align-items-center justify-content-center"
-                                style="width: 30px; height: 30px;">
-                                    <i class="ti ti-pencil fs-xs"></i>
-                                </a>
-                                <form action="../admin/delete-feedback" method="post" class="d-inline m-0">
-                                    <input type="hidden" name="id" value="<%= feedback.getId() %>">
-                                    <input type="hidden" name="page" value="<%= currentPage %>">
-                                    <button type="submit" 
-                                            class="ad-btn ad-delete d-flex align-items-center justify-content-center"
-                                            style="width: 30px; height: 30px;"
-                                            onclick="return confirm('Are you sure?')">
-                                        <i class="ti ti-trash fs-xs"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <%
-                            }
-                        } else {
-                    %>
-                    <tr>
-                        <td colspan="8" class="text-center py-4 fs-sm">No feedback found.</td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
-        
-        <%-- Pagination --%>
-        <% if (totalPages > 1) { %>
-        <nav aria-label="Page navigation" class="mt-3">
-            <ul class="pagination justify-content-center">
-                <%-- Previous button --%>
-                <li class="page-item <%= currentPage == 1 ? "disabled" : "" %>">
-                    <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                
-                <%-- Page numbers --%>
-                <% for (int i = 1; i <= totalPages; i++) { %>
-                    <li class="page-item <%= i == currentPage ? "active" : "" %>">
-                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                    </li>
-                <% } %>
-                
-                <%-- Next button --%>
-                <li class="page-item <%= currentPage == totalPages ? "disabled" : "" %>">
-                    <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <% } %>
-    </div>
-</div>
-                  </div>
+</form>
               </div>
+            </div>
           </div>
+        </div>
       </div>  
     </div>
   </div>
@@ -354,52 +320,7 @@
   <script src="/enchanted_elegance/pages/admin/libs/simplebar/dist/simplebar.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/dashboard.js"></script>
   <script src="/enchanted_elegance/pages/admin/js/alert.js"></script>
-   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.getElementById('filter-select');
-        
-        filterSelect.addEventListener('change', function() {
-            const selectedValue = this.value;
-            let filterId;
-            
-            // Map the selected value to the corresponding filterId
-            switch(selectedValue) {
-                case 'all':
-                    filterId = 1;
-                    break;
-                case 'true':
-                    filterId = 2;  // Assuming 'Published' is filterId=2 (you had 1 in your example, but it's not clear)
-                    break;
-                case 'false':
-                    filterId = 3;
-                    break;
-                default:
-                    filterId = 1;
-            }
-            
-            // Redirect to the new URL with the filterId
-            window.location.href = `/enchanted_elegance/admin/feedback-list?filterId=${filterId}`;
-        });
-        
-        // Optional: Set the initial selected value based on the current URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentFilterId = urlParams.get('filterId');
-        
-        if (currentFilterId) {
-            switch(currentFilterId) {
-                case '1':
-                    filterSelect.value = 'all';
-                    break;
-                case '2':
-                    filterSelect.value = 'true';
-                    break;
-                case '3':
-                    filterSelect.value = 'false';
-                    break;
-            }
-        }
-    });
-   </script>
+  <script src="/enchanted_elegance/pages/admin/js/feedback-edit-form.js"></script>
 </body>
 
 </html>
