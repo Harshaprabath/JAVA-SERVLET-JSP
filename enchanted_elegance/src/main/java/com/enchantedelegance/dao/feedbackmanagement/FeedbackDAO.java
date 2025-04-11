@@ -67,6 +67,19 @@ public class FeedbackDAO {
 
         return publishedFeedbacks;
     }
+    // Get all unpublished feedbacks
+    public List<Feedback> getFeedbackUnPublished() {
+        List<Feedback> unPublishedFeedbacks = new ArrayList<>();
+        List<Feedback> feedbacks = this.getAllFeedbacks();
+
+        for (Feedback feedback : feedbacks) {
+            if (!feedback.isPublish()) {
+                unPublishedFeedbacks.add(feedback);
+            }
+        }
+
+        return unPublishedFeedbacks;
+    }
 
 
     // Add a new feedback to the text file
