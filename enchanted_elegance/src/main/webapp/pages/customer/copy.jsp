@@ -17,7 +17,7 @@
         <div class="row align-items-center">
 
           <div class="col-6 col-xl-2" data-aos="fade-down">
-            <h1 class="mb-0"><a href="/enchanted_elegance/pages/customer/index.jsp" class="text-black h2 mb-0 single-line">Enchanted Elegance</a></h1>
+            <h1 class="mb-0"><a href="/enchanted_elegance" class="text-black h2 mb-0 single-line">Enchanted Elegance</a></h1>
           </div>
           <div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
             <nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
@@ -88,18 +88,18 @@
               </div>
               <div class="col-md-6 col-lg-6">
                 <ul class="list-unstyled">
-                  <li><a href="index.jsp">Home</a></li>
-                  <li><a href="services.jsp">Services</a></li>
-                  <li><a href="haircut.jsp">Haircut</a></li>
-                  <li><a href="booking.jsp">Book Online</a></li>
+                  <li><a href="/enchanted_elegance">Home</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/services.jsp">Services</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/haircut.jsp">Haircut</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/booking.jsp">Book Online</a></li>
                 </ul>
               </div>
               <div class="col-md-6 col-lg-6">
                 <ul class="list-unstyled">
-                  <li><a href="contact.jsp">Contact</a></li>
-                  <li><a href="about.jsp">About Us</a></li>
-                  <li><a href="feedback.jsp">Feedback</a></li>
-                  <li><a href="privacy-policy.jsp">Privacy Policy</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/contact.jsp">Contact</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/about.jsp">About Us</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/feedback.jsp">Feedback</a></li>
+                  <li><a href="/enchanted_elegance/pages/customer/privacy-policy.jsp">Privacy Policy</a></li>
                 </ul>
               </div>
             </div>
@@ -133,7 +133,7 @@
 
             <p>
               Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
-              with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="index.jsp"
+              with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="/enchanted_elegance"
                 target="_blank">Enchanted Elegance</a>
             </p>
           </div>
