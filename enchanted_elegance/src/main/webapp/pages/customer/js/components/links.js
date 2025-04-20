@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Define the URLs
-    const homeUrl = "/enchanted_elegance/pages/customer/index.jsp";
-    const servicesUrl = "services.jsp";
-    const haircutUrl = "haircut.jsp";
+    const homeUrl = "/enchanted_elegance";
+    const servicesUrl = "/enchanted_elegance/pages/customer/services.jsp";
+    const haircutUrl = "/enchanted_elegance/pages/customer/haircut.jsp";
     const bookUrl = "/enchanted_elegance/pages/customer/booking.jsp";
     const contactUrl = "/enchanted_elegance/pages/customer/contact.jsp";
-    const aboutUrl = "about.jsp";
+    const aboutUrl = "/enchanted_elegance/pages/customer/about.jsp";
     const feedbackUrl = "/enchanted_elegance/pages/customer/feedback.jsp";
     const loginUrl = "/enchanted_elegance/pages/customer/login.jsp";
     const registerUrl = "/enchanted_elegance/pages/customer/register.jsp";
