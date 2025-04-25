@@ -16,6 +16,6 @@ public class LogoutServlet extends HttpServlet {
         if (session != null) {
             session.removeAttribute("user");
         }
-        resp.sendRedirect("pages/customer/index.jsp?success=Logout successful");
+        resp.sendRedirect("/enchanted_elegance?success=Logout successful");
     }
 }
