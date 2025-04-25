@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
             session.setMaxInactiveInterval(30 * 60); // Session expires in 30 minutes
 
             // Redirect to profile page
-            resp.sendRedirect("pages/customer/index.jsp?success=Login+successful");
+            resp.sendRedirect("/enchanted_elegance?success=Login+successful");
         } else {
             // Invalid login: redirect to login page with error message
             resp.sendRedirect("pages/customer/login.jsp?error=Invalid+email+or+password");
