@@ -1,0 +1,8 @@
+1,Admin,1234567890,admin@example.com,admin123
+2,Site Admin,0705200409,info@gmail.com,info@gmail.com
+1,Admin 3,1234567890,a3@example.com,admin123
+4,Admin 4,1234567890,a4@example.com,admin123
+1,Admin 5,1234567890,a5@example.com,admin123
+1,Admin 6,1234567890,a6@example.com,admin123
+1,Admin 7,1234567890,a7@example.com,admin123
+1,Admin 8,1234567890,a8@example.com,admin123
