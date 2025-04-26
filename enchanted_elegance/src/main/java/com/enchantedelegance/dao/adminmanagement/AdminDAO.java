@@ -1,13 +1,14 @@
 package com.enchantedelegance.dao.adminmanagement;
 
 import com.enchantedelegance.models.adminmanagement.Admin;
+import com.enchantedelegance.root.RootPath;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDAO {
-    private static final String FILE_PATH =  "src/main/resources/data/adminmanagement/admins.txt"; // Updated file path
+    private static final String FILE_PATH =  RootPath.rootPath+"/src/main/resources/data/adminmanagement/admins.txt"; // Updated file path
     private static final String DELIMITER = ","; // Delimiter for separating fields
 
     public AdminDAO() {

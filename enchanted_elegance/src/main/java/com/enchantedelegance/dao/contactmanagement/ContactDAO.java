@@ -1,13 +1,14 @@
 package com.enchantedelegance.dao.contactmanagement;
 
 import com.enchantedelegance.models.contactmanagement.Contact;
+import com.enchantedelegance.root.RootPath;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDAO {
-    private static final String FILE_PATH =  "src/main/resources/data/contactmanagement/contact.txt"; // Updated file path
+    private static final String FILE_PATH =  RootPath.rootPath+"/src/main/resources/data/contactmanagement/contact.txt"; // Updated file path
     private static final String DELIMITER = ","; // Delimiter for separating fields
 
     public ContactDAO() {

@@ -1,13 +1,14 @@
 package com.enchantedelegance.dao.feedbackmanagement;
 
 import com.enchantedelegance.models.feedbackmanagement.Feedback;
+import com.enchantedelegance.root.RootPath;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FeedbackDAO {
-    private static final String FILE_PATH =  "src/main/resources/data/feedbackmanagement/Feedback.txt"; // Updated file path
+    private static final String FILE_PATH = RootPath.rootPath+ "/src/main/resources/data/feedbackmanagement/Feedback.txt"; // Updated file path
     private static final String DELIMITER = ","; // Delimiter for separating fields
 
     public FeedbackDAO() {
