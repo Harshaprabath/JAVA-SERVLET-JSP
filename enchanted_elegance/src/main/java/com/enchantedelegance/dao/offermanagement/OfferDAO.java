@@ -1,12 +1,14 @@
 package com.enchantedelegance.dao.offermanagement;
 
 import com.enchantedelegance.models.offermanagement.Offer;
+import com.enchantedelegance.root.RootPath;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OfferDAO {
-    private static final String FILE_PATH = "src/main/resources/data/offermanagement/Offer.txt";
+    private static final String FILE_PATH = RootPath.rootPath+"/src/main/resources/data/offermanagement/Offer.txt";
     private static final String DELIMITER = ",";
 
     public OfferDAO() {

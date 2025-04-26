@@ -1,13 +1,14 @@
 package com.enchantedelegance.dao.usermanagement;
 
 import com.enchantedelegance.models.usermanagement.User;
+import com.enchantedelegance.root.RootPath;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
-    private static final String FILE_PATH =  "src/main/resources/data/usermanagement/users.txt"; // Updated file path
+    private static final String FILE_PATH =  RootPath.rootPath+"/src/main/resources/data/usermanagement/users.txt"; // Updated file path
     private static final String DELIMITER = ","; // Delimiter for separating fields
 
     public UserDAO() {

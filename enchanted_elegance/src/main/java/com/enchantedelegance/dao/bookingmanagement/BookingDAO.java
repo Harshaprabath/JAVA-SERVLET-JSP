@@ -1,13 +1,14 @@
 package com.enchantedelegance.dao.bookingmanagement;
 
 import com.enchantedelegance.models.bookingmanagement.Booking;
+import com.enchantedelegance.root.RootPath;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookingDAO {
-    private static final String FILE_PATH =  "src/main/resources/data/bookingmanagement/booking.txt"; // Updated file path
+    private static final String FILE_PATH =  RootPath.rootPath+"/src/main/resources/data/bookingmanagement/booking.txt"; // Updated file path
     private static final String DELIMITER = ","; // Delimiter for separating fields
 
     public BookingDAO() {
