@@ -1,0 +1,14 @@
+1,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,true
+2,Devindi Thathsarani,1@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,true
+3,Harsha Prabath,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,true
+4,Nisan Alvis,custormer@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,true
+5,Sasanka Nishamini,info@gmail.com,0705200409,"Good Good",2025-04-26,true
+6,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+7,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+8,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+9,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+10,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+11,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+12,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+13,Sasanka Nishamini,info@gmail.com,0705200409,"Amazing service! Loved my haircut great attention to detail. Friendly staff & clean salon. Will be back!",2025-04-26,false
+14,Sasanka Nishamini,info@gmail.com,0705200409,k,2025-04-26,false

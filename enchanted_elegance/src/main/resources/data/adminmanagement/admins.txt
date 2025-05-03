@@ -1,0 +1,9 @@
+1,Admin,1234567890,admin@example.com,12345678
+2,Site Admin,0705200409,info@gmail.com,info@gmail.com
+1,Admin,1234567890,admin@example.com,12345678
+4,Admin 4,1234567890,a4@example.com,admin123
+1,Admin,1234567890,admin@example.com,12345678
+1,Admin,1234567890,admin@example.com,12345678
+1,Admin,1234567890,admin@example.com,12345678
+1,Admin,1234567890,admin@example.com,12345678
+2,Harsha prebatch,0705200409,prabhathhemasiri@gmail.com,prabhathhemasiri@gmail.com
