@@ -1,0 +1,7 @@
+git update-index --assume-unchanged src/main/java/com/enchantedelegance/root/RootPath.java
+git update-index --assume-unchanged src/main/resources/data/adminmanagement/admins.txt
+git update-index --assume-unchanged src/main/resources/data/bookingmanagement/booking.txt
+git update-index --assume-unchanged src/main/resources/data/contactmanagement/contact.txt
+git update-index --assume-unchanged src/main/resources/data/feedbackmanagement/Feedback.txt
+git update-index --assume-unchanged src/main/resources/data/offermanagement/Offer.txt
+git update-index --assume-unchanged src/main/resources/data/usermanagement/users.txt
