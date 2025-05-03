@@ -10,4 +10,3 @@
 10,Alpha,0790123456,alpha@site.com,alpha@site.com
 11,Beta,0701234567,beta@site.com,beta@site.com
 12,Support,0711111111,support@mail.com,support@mail.com
-13,Harsha prebatch,0705200409,hemasiri@gmail.com,hemasiri@gmail.com
