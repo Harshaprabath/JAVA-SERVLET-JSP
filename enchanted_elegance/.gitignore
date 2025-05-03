@@ -1,5 +1,5 @@
-# Ignore the 'root' folder inside 'com.enchantedelegance'
-src/main/java/com/enchantedelegance/root/
+# Ignore RootPath.java
+src/main/java/com/enchantedelegance/root/RootPath.java
 
-# Ignore the 'data' folder inside 'resources'
-src/main/resources/data/
+# Ignore all .txt files inside any subfolder of data/
+src/main/resources/data/*/*.txt
