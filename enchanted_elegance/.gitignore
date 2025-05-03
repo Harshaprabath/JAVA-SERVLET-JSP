@@ -1,0 +1,5 @@
+# Ignore the 'root' folder inside 'com.enchantedelegance'
+src/main/java/com/enchantedelegance/root/
+
+# Ignore the 'data' folder inside 'resources'
+src/main/resources/data/
