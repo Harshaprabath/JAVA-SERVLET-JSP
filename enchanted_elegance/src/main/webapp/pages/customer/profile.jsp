@@ -170,16 +170,16 @@
             
             <div class="p-4 mb-3 mt-3 bg-white">
               <p class="mb-0 font-weight-bold">New Booking</p>
-              <p class="mb-4"><a href="booking.jsp">Click Here</a></p>
+              <p class="mb-4"><a href="/enchanted_elegance/pages/customer/booking.jsp">Click Here</a></p>
 
               <p class="mb-0 font-weight-bold">My All Bookings</p>
-              <p class="mb-4"><a href="../../booking-list">Click Here</a></p>
+              <p class="mb-4"><a href="/enchanted_elegance/booking-list">Click Here</a></p>
               
               <p class="mb-0 font-weight-bold">Contact Enchanted Elegance</p>
-              <p class="mb-4"><a href="contact.jsp">Click Here</a></p>
+              <p class="mb-4"><a href="/enchanted_elegance/pages/customer/contact.jsp">Click Here</a></p>
       
               <p class="mb-0 font-weight-bold">Give Feedback</p>
-              <p class="mb-0"><a href="feedback.jsp">Click Here</a></p>
+              <p class="mb-0"><a href="/enchanted_elegance/pages/customer/feedback.jsp">Click Here</a></p>
 
             </div>
           </div>
